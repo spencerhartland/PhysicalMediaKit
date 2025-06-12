@@ -1,0 +1,337 @@
+{
+  "ABIRoot": {
+    "kind": "Root",
+    "name": "PhysicalMediaKit",
+    "printedName": "PhysicalMediaKit",
+    "children": [
+      {
+        "kind": "Import",
+        "name": "SwiftUI",
+        "printedName": "SwiftUI",
+        "declKind": "Import",
+        "moduleName": "PhysicalMediaKit",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "RealityKit",
+        "printedName": "RealityKit",
+        "declKind": "Import",
+        "moduleName": "PhysicalMediaKit"
+      },
+      {
+        "kind": "Import",
+        "name": "SwiftUI",
+        "printedName": "SwiftUI",
+        "declKind": "Import",
+        "moduleName": "PhysicalMediaKit",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "RealityKit",
+        "printedName": "RealityKit",
+        "declKind": "Import",
+        "moduleName": "PhysicalMediaKit"
+      },
+      {
+        "kind": "Import",
+        "name": "SwiftUI",
+        "printedName": "SwiftUI",
+        "declKind": "Import",
+        "moduleName": "PhysicalMediaKit",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "RealityKit",
+        "printedName": "RealityKit",
+        "declKind": "Import",
+        "moduleName": "PhysicalMediaKit"
+      },
+      {
+        "kind": "Import",
+        "name": "RealityKit",
+        "printedName": "RealityKit",
+        "declKind": "Import",
+        "moduleName": "PhysicalMediaKit",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "Import",
+        "name": "SwiftUI",
+        "printedName": "SwiftUI",
+        "declKind": "Import",
+        "moduleName": "PhysicalMediaKit",
+        "declAttributes": [
+          "RawDocComment"
+        ]
+      },
+      {
+        "kind": "TypeDecl",
+        "name": "PhysicalMedia",
+        "printedName": "PhysicalMedia",
+        "children": [
+          {
+            "kind": "Var",
+            "name": "vinylRecord",
+            "printedName": "vinylRecord",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "OpaqueTypeArchetype",
+                "printedName": "some SwiftUI.View",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "View",
+                    "printedName": "SwiftUI.View",
+                    "usr": "s:7SwiftUI4ViewP"
+                  }
+                ]
+              }
+            ],
+            "declKind": "Var",
+            "usr": "s:16PhysicalMediaKit0aB0V11vinylRecordQrvpZ",
+            "mangledName": "$s16PhysicalMediaKit0aB0V11vinylRecordQrvpZ",
+            "moduleName": "PhysicalMediaKit",
+            "static": true,
+            "declAttributes": [
+              "AccessControl"
+            ],
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "OpaqueTypeArchetype",
+                    "printedName": "some SwiftUI.View",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "View",
+                        "printedName": "SwiftUI.View",
+                        "usr": "s:7SwiftUI4ViewP"
+                      }
+                    ]
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:16PhysicalMediaKit0aB0V11vinylRecordQrvgZ",
+                "mangledName": "$s16PhysicalMediaKit0aB0V11vinylRecordQrvgZ",
+                "moduleName": "PhysicalMediaKit",
+                "static": true,
+                "accessorKind": "get"
+              }
+            ]
+          }
+        ],
+        "declKind": "Struct",
+        "usr": "s:16PhysicalMediaKit0aB0V",
+        "mangledName": "$s16PhysicalMediaKit0aB0V",
+        "moduleName": "PhysicalMediaKit",
+        "declAttributes": [
+          "AccessControl"
+        ],
+        "conformances": [
+          {
+            "kind": "Conformance",
+            "name": "Copyable",
+            "printedName": "Copyable",
+            "usr": "s:s8CopyableP",
+            "mangledName": "$ss8CopyableP"
+          },
+          {
+            "kind": "Conformance",
+            "name": "Escapable",
+            "printedName": "Escapable",
+            "usr": "s:s9EscapableP",
+            "mangledName": "$ss9EscapableP"
+          }
+        ]
+      }
+    ],
+    "json_format_version": 8
+  },
+  "ConstValues": [
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/CompactCassette3DModelView.swift",
+      "kind": "StringLiteral",
+      "offset": 199,
+      "length": 10,
+      "value": "\"cassette\""
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/CompactCassette3DModelView.swift",
+      "kind": "Array",
+      "offset": 242,
+      "length": 206,
+      "value": "[\"A\", \"B\", \"Cover_1\", \"Cover_Holder\", \"Holder_Glass\", \"Push_1\", \"Push_2\", \"Cover_2\", \"Cover_Holder_1\", \"Holder_Glass_1\"]"
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/CompactCassette3DModelView.swift",
+      "kind": "StringLiteral",
+      "offset": 489,
+      "length": 10,
+      "value": "\"albumArt\""
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/CompactCassette3DModelView.swift",
+      "kind": "StringLiteral",
+      "offset": 545,
+      "length": 15,
+      "value": "\"cassetteColor\""
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/CompactCassette3DModelView.swift",
+      "kind": "StringLiteral",
+      "offset": 608,
+      "length": 17,
+      "value": "\"cassetteOpacity\""
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/CompactCassette3DModelView.swift",
+      "kind": "FloatLiteral",
+      "offset": 668,
+      "length": 4,
+      "value": "10.0"
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/CompactCassette3DModelView.swift",
+      "kind": "IntegerLiteral",
+      "offset": 716,
+      "length": 1,
+      "value": "4"
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/CompactCassette3DModelView.swift",
+      "kind": "BooleanLiteral",
+      "offset": 766,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/CompactCassette3DModelView.swift",
+      "kind": "IntegerLiteral",
+      "offset": 814,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/CompactCassette3DModelView.swift",
+      "kind": "IntegerLiteral",
+      "offset": 858,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/CompactDisc3DModelView.swift",
+      "kind": "StringLiteral",
+      "offset": 206,
+      "length": 4,
+      "value": "\"cd\""
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/CompactDisc3DModelView.swift",
+      "kind": "Array",
+      "offset": 237,
+      "length": 55,
+      "value": "[\"Booklet_Front\", \"Booklet_Back\"]"
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/CompactDisc3DModelView.swift",
+      "kind": "StringLiteral",
+      "offset": 333,
+      "length": 10,
+      "value": "\"albumArt\""
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/CompactDisc3DModelView.swift",
+      "kind": "FloatLiteral",
+      "offset": 386,
+      "length": 3,
+      "value": "6.0"
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/CompactDisc3DModelView.swift",
+      "kind": "IntegerLiteral",
+      "offset": 433,
+      "length": 1,
+      "value": "4"
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/CompactDisc3DModelView.swift",
+      "kind": "BooleanLiteral",
+      "offset": 483,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/CompactDisc3DModelView.swift",
+      "kind": "IntegerLiteral",
+      "offset": 531,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/CompactDisc3DModelView.swift",
+      "kind": "IntegerLiteral",
+      "offset": 575,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/VinylRecord3DModelView.swift",
+      "kind": "StringLiteral",
+      "offset": 195,
+      "length": 19,
+      "value": "\"vinyl_record.usdz\""
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/VinylRecord3DModelView.swift",
+      "kind": "IntegerLiteral",
+      "offset": 257,
+      "length": 1,
+      "value": "5"
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/VinylRecord3DModelView.swift",
+      "kind": "IntegerLiteral",
+      "offset": 302,
+      "length": 1,
+      "value": "4"
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/VinylRecord3DModelView.swift",
+      "kind": "BooleanLiteral",
+      "offset": 352,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/VinylRecord3DModelView.swift",
+      "kind": "IntegerLiteral",
+      "offset": 400,
+      "length": 1,
+      "value": "0"
+    },
+    {
+      "filePath": "\/Users\/spencerhartland\/Desktop\/Developer\/PhysicalMediaKit\/PhysicalMediaKit\/3D Model Views\/VinylRecord3DModelView.swift",
+      "kind": "IntegerLiteral",
+      "offset": 444,
+      "length": 1,
+      "value": "0"
+    }
+  ]
+}

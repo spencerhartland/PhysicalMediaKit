@@ -1,0 +1,41 @@
+{
+  "" : {
+    "const-values" : "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/build/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/PhysicalMediaKit-master.swiftconstvalues",
+    "dependencies" : "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/build/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/PhysicalMediaKit-master.d",
+    "diagnostics" : "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/build/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/PhysicalMediaKit-master.dia",
+    "emit-module-dependencies" : "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/build/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/PhysicalMediaKit-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/build/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/PhysicalMediaKit-master-emit-module.dia",
+    "pch" : "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/build/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/PhysicalMediaKit-master-Bridging-header.pch",
+    "swift-dependencies" : "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/build/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/PhysicalMediaKit-master.swiftdeps"
+  },
+  "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/PhysicalMediaKit/3D Model Views/CompactCassette3DModelView.swift" : {
+    "index-unit-output-path" : "/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/CompactCassette3DModelView.o",
+    "llvm-bc" : "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/build/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/CompactCassette3DModelView.bc",
+    "object" : "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/build/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/CompactCassette3DModelView.o"
+  },
+  "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/PhysicalMediaKit/3D Model Views/CompactDisc3DModelView.swift" : {
+    "index-unit-output-path" : "/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/CompactDisc3DModelView.o",
+    "llvm-bc" : "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/build/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/CompactDisc3DModelView.bc",
+    "object" : "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/build/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/CompactDisc3DModelView.o"
+  },
+  "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/PhysicalMediaKit/3D Model Views/VinylRecord3DModelView.swift" : {
+    "index-unit-output-path" : "/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/VinylRecord3DModelView.o",
+    "llvm-bc" : "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/build/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/VinylRecord3DModelView.bc",
+    "object" : "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/build/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/VinylRecord3DModelView.o"
+  },
+  "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/PhysicalMediaKit/PhysicalMediaKit.swift" : {
+    "index-unit-output-path" : "/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/PhysicalMediaKit.o",
+    "llvm-bc" : "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/build/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/PhysicalMediaKit.bc",
+    "object" : "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/build/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/PhysicalMediaKit.o"
+  },
+  "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/PhysicalMediaKit/Support/EntityExtension.swift" : {
+    "index-unit-output-path" : "/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/EntityExtension.o",
+    "llvm-bc" : "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/build/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/EntityExtension.bc",
+    "object" : "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/build/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/EntityExtension.o"
+  },
+  "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/PhysicalMediaKit/Support/MaterialError.swift" : {
+    "index-unit-output-path" : "/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/MaterialError.o",
+    "llvm-bc" : "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/build/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/MaterialError.bc",
+    "object" : "/Users/spencerhartland/Desktop/Developer/PhysicalMediaKit/build/PhysicalMediaKit.build/Release-iphoneos/PhysicalMediaKit.build/Objects-normal/arm64/MaterialError.o"
+  }
+}
