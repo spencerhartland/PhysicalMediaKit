@@ -13,7 +13,15 @@ struct ContentView: View {
     
     var body: some View {
         if let albumArtURL = URL(string: demoAlbumArtURLString) {
-            PhysicalMedia.vinylRecord(albumArtURL: albumArtURL, vinylColor: .orange, vinylOpacity: 0.8)
+            VStack {
+                PhysicalMedia.compactDisc(
+                    albumArtURL: albumArtURL,
+                    scale: 0.6
+                )
+                
+                Text("cd.usdz")
+            }
+            
         } else {
             Text(":(\nAn error occurred while loading the Album Art.")
         }

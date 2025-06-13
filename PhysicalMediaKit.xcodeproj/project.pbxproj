@@ -46,6 +46,8 @@
 		003DF9D42DFB8A2C0093BEB8 /* Exceptions for "PhysicalMediaKit" folder in "PhysicalMediaDemo" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Assets/cassette.usdz,
+				Assets/cd.usdz,
 				Assets/vinyl_record.usdz,
 			);
 			target = 003DF9C72DFB89210093BEB8 /* PhysicalMediaDemo */;

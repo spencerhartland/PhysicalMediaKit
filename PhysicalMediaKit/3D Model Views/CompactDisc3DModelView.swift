@@ -10,17 +10,23 @@ import RealityKit
 
 struct CompactDisc3DModelView: View {
     private let entityName = "cd"
-    private let cdParts = [
-        "Booklet_Front",
-        "Booklet_Back"
-    ]
+    private let cdBookletFrontPartName = "Booklet_Front"
+    private let cdBookletBackPartName = "Booklet_Back"
     private let albumArtParameterName = "albumArt"
-    private let modelScaleFactor: Float = 6.0
+    private let defaultModelScaleFactor: Float = 10.0
     private let attractLoopDelay: Double = 4
     
     @State private var dragGestureActive = false
     @State private var rotationX: Float = 0
     @State private var rotationY: Float = 0
+    
+    @State private var albumArtURL: URL
+    @State private var modelScaleFactor: Float
+    
+    public init(_ albumArtURL: URL,_ scale: Float) {
+        self.albumArtURL = albumArtURL
+        self.modelScaleFactor = scale * defaultModelScaleFactor
+    }
     
     var body: some View {
         RealityView { content in
@@ -28,7 +34,7 @@ struct CompactDisc3DModelView: View {
                 entity.name = entityName
                 entity.setScale(.init(x: modelScaleFactor, y: modelScaleFactor, z: modelScaleFactor), relativeTo: entity)
                 entity.generateCollisionShapes(recursive: true)
-                updateBookletMaterial(for: entity)
+                await updateBookletMaterial(for: entity)
                 content.add(entity)
             }
         } update: { content in
@@ -86,25 +92,49 @@ struct CompactDisc3DModelView: View {
         }
     }
     
-    private func updateBookletMaterial(for cd: Entity) {
-        for partName in cdParts {
-            if let part = cd.findEntity(named: partName) {
-                do {
-                    try part.modifyMaterials { material in
-                        guard var booklet = material as? ShaderGraphMaterial else {
-                            throw PhysicalMediaError.failedToLoadMaterial
-                        }
-                        
-                        try booklet.setParameter(
-                            name: albumArtParameterName,
-                            value: .color(.init(red: 1.0, green: 0.2, blue: 0.5, alpha: 1))
-                        )
-                        
-                        return booklet
-                    }
-                } catch {
-                    print("Some error occurred")
+    private func updateBookletMaterial(for cd: Entity) async {
+        if let bookletFront = cd.findEntity(named: cdBookletFrontPartName),
+           let bookletBack = cd.findEntity(named: cdBookletBackPartName) {
+            do {
+                // Download album art
+                guard let (data, _) = try? await URLSession.shared.data(from: albumArtURL),
+                      let uiImage = UIImage(data: data),
+                      let cgImage = uiImage.cgImage else {
+                    throw PhysicalMediaError.failedToLoadAlbumArt
                 }
+                
+                // Generate texture from album art
+                guard let texture = try? await TextureResource(image: cgImage, options: .init(semantic: .color)) else {
+                    throw PhysicalMediaError.failedToGenerateTextureFromImage
+                }
+                
+                try bookletFront.modifyMaterials { material in
+                    guard var paper = material as? ShaderGraphMaterial else {
+                        throw PhysicalMediaError.failedToLoadMaterial
+                    }
+                    
+                    try paper.setParameter(
+                        name: albumArtParameterName,
+                        value: .textureResource(texture)
+                    )
+                    
+                    return paper
+                }
+                
+                try bookletBack.modifyMaterials { material in
+                    guard var paper = material as? ShaderGraphMaterial else {
+                        throw PhysicalMediaError.failedToLoadMaterial
+                    }
+                    
+                    try paper.setParameter(
+                        name: albumArtParameterName,
+                        value: .textureResource(texture)
+                    )
+                    
+                    return paper
+                }
+            } catch {
+                print("Some error occurred: \(error)")
             }
         }
     }
@@ -151,8 +181,4 @@ struct CompactDisc3DModelView: View {
             }
         }
     }
-}
-
-#Preview {
-    CompactDisc3DModelView()
 }
