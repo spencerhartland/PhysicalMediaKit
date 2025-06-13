@@ -13,9 +13,14 @@ public struct PhysicalMedia {
     /// - Parameters:
     ///     - albumArtURL: The remote URL from which to retrieve album artwork.
     ///     - vinylColor: The approximate color of the vinyl.
-    ///     - vinylOpacity: The opacity of the vinyl.
+    ///     - vinylOpacity: The approximate opacity of the vinyl.
     ///     - scale: The scale, from 0.0 to 1.0, at which to display the model.
-    public static func vinylRecord(albumArtURL: URL, vinylColor: Color, vinylOpacity: Float, scale: Float = 1.0) -> some View {
+    public static func vinylRecord(
+        albumArtURL: URL,
+        vinylColor: Color,
+        vinylOpacity: Float,
+        scale: Float = 1.0
+    ) -> some View {
         VinylRecord3DModelView(albumArtURL, vinylColor, vinylOpacity, scale)
     }
     
@@ -23,11 +28,25 @@ public struct PhysicalMedia {
     /// - Parameters:
     ///     - albumArtURL: The remote URL from which to retrieve album artwork.
     ///     - scale: The scale, from 0.0 to 1.0, at which to display the model.
-    public static func compactDisc(albumArtURL: URL, scale: Float = 1.0) -> some View {
+    public static func compactDisc(
+        albumArtURL: URL,
+        scale: Float = 1.0
+    ) -> some View {
         CompactDisc3DModelView(albumArtURL, scale)
     }
     
-    // TODO: Convert to function that accepts albumArt and cassetteColor as parameters.
-    /// A view displaying an animated 3D model of a compact cassette inside of its case.
-    public static var compactCassette: some View { CompactCassette3DModelView() }
+    /// Creates a view displaying an animated 3D model of a compact cassette inside of its case.
+    /// - Parameters:
+    ///     - albumArtURL: The remote URL from which to retrieve album artwork.
+    ///     - cassetteColor: The approximate color of the cassette.
+    ///     - cassetteOpacity: The approximate opacity of the cassette.
+    ///     - scale: The scale, from 0.0 to 1.0, at which to display the model.
+    public static func compactCassette(
+        albumArtURL: URL,
+        cassetteColor: Color,
+        cassetteOpacity: Float,
+        scale: Float = 1.0
+    ) -> some View {
+        CompactCassette3DModelView(albumArtURL, cassetteColor, cassetteOpacity, scale)
+    }
 }

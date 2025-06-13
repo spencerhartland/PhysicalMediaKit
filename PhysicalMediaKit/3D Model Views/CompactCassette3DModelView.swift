@@ -25,12 +25,29 @@ struct CompactCassette3DModelView: View {
     private let albumArtParameterName = "albumArt"
     private let cassetteColorParameterName = "cassetteColor"
     private let cassetteOpacityParameterName = "cassetteOpacity"
-    private let modelScaleFactor: Float = 10.0
+    private let defaultModelScaleFactor: Float = 10.0
     private let attractLoopDelay: Double = 4
     
     @State private var dragGestureActive = false
     @State private var rotationX: Float = 0
     @State private var rotationY: Float = 0
+    
+    @State private var albumArtURL: URL
+    @State private var cassetteColor: Color
+    @State private var cassetteOpacity: Float
+    @State private var modelScaleFactor: Float
+    
+    public init(
+        _ albumArtURL: URL,
+        _ cassetteColor: Color,
+        _ cassetteOpacity: Float,
+        _ scale: Float = 1.0
+    ) {
+        self.albumArtURL = albumArtURL
+        self.cassetteColor = cassetteColor
+        self.cassetteOpacity = cassetteOpacity
+        self.modelScaleFactor = scale * defaultModelScaleFactor
+    }
     
     var body: some View {
         RealityView { content in
@@ -38,7 +55,7 @@ struct CompactCassette3DModelView: View {
                 entity.name = entityName
                 entity.setScale(.init(x: modelScaleFactor, y: modelScaleFactor, z: modelScaleFactor), relativeTo: entity)
                 entity.generateCollisionShapes(recursive: true)
-                updateCoverMaterial(for: entity)
+                await updateCoverMaterial(for: entity)
                 updateCassetteMaterial(for: entity)
                 content.add(entity)
             }
@@ -97,10 +114,22 @@ struct CompactCassette3DModelView: View {
         }
     }
     
-    private func updateCoverMaterial(for parent: Entity) {
-        if let cover = parent.findEntity(named: "Cover"),
-           let texture = try? TextureResource.load(named: "album_art.png") {
+    private func updateCoverMaterial(for parent: Entity) async {
+        if let cover = parent.findEntity(named: "Cover") {
             do {
+                // Download album art
+                guard let (data, _) = try? await URLSession.shared.data(from: albumArtURL),
+                      let uiImage = UIImage(data: data),
+                      let cgImage = uiImage.cgImage else {
+                    throw PhysicalMediaError.failedToLoadAlbumArt
+                }
+                
+                // Generate texture from image
+                guard let texture = try? await TextureResource(image: cgImage, options: .init(semantic: .color)) else {
+                    throw PhysicalMediaError.failedToGenerateTextureFromImage
+                }
+                
+                // Apply texture to cassette cover
                 try cover.modifyMaterials { material in
                     guard var paper = material as? ShaderGraphMaterial else {
                         throw PhysicalMediaError.failedToLoadMaterial
@@ -130,11 +159,11 @@ struct CompactCassette3DModelView: View {
                         
                         try plastic.setParameter(
                             name: cassetteColorParameterName,
-                            value: .color(.init(red: 1.0, green: 0.2, blue: 0.5, alpha: 1))
+                            value: .color(UIColor(cassetteColor))
                         )
                         try plastic.setParameter(
                             name: cassetteOpacityParameterName,
-                            value: .float(1.0)
+                            value: .float(cassetteOpacity)
                         )
                         
                         return plastic
@@ -188,8 +217,4 @@ struct CompactCassette3DModelView: View {
             }
         }
     }
-}
-
-#Preview {
-    CompactCassette3DModelView()
 }

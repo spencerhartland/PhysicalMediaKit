@@ -29,7 +29,12 @@ struct VinylRecord3DModelView: View {
     @State private var vinylOpacity: Float
     @State private var modelScaleFactor: Float
     
-    public init(_ albumArtURL: URL, _ vinylColor: Color, _ vinylOpacity: Float,_ scale: Float = 1.0) {
+    public init(
+        _ albumArtURL: URL,
+        _ vinylColor: Color,
+        _ vinylOpacity: Float,
+        _ scale: Float = 1.0
+    ) {
         self.albumArtURL = albumArtURL
         self.vinylColor = vinylColor
         self.vinylOpacity = vinylOpacity
