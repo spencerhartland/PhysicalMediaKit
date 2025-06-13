@@ -1,5 +1,5 @@
 //
-//  PhysicalMediaKit.swift
+//  PhysicalMedia.swift
 //  PhysicalMediaKit
 //
 //  Created by Spencer Hartland on 5/7/25.
