@@ -11,7 +11,9 @@ import SwiftUI
 public struct PhysicalMedia {
     // TODO: Convert to function that accepts albumArt and vinylColor as parameters.
     /// A view displaying an animated 3D model of a vinyl record partially pulled from its sleeve.
-    public static var vinylRecord: some View { VinylRecord3DModelView() }
+    public static func vinylRecord(vinylColor: Color, vinylOpacity: Float) -> some View {
+        VinylRecord3DModelView(vinylColor, vinylOpacity)
+    }
     
     // TODO: Convert to function that accepts albumArt as a parameter.
     /// A view displaying an animated 3D model of a compact disc inside of its partially open case.

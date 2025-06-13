@@ -8,7 +8,33 @@
 
 /* Begin PBXBuildFile section */
 		003DF9D62DFB91930093BEB8 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 003DF9D52DFB91890093BEB8 /* README.md */; };
+		003DF9D82DFBA6940093BEB8 /* PhysicalMediaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00F2998D2DCBDB1B0095A089 /* PhysicalMediaKit.framework */; };
+		003DF9D92DFBA6940093BEB8 /* PhysicalMediaKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 00F2998D2DCBDB1B0095A089 /* PhysicalMediaKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		003DF9DA2DFBA6940093BEB8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 00F299842DCBDB1B0095A089 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 00F2998C2DCBDB1B0095A089;
+			remoteInfo = PhysicalMediaKit;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		003DF9DC2DFBA6940093BEB8 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				003DF9D92DFBA6940093BEB8 /* PhysicalMediaKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		003DF9C82DFB89210093BEB8 /* PhysicalMediaDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhysicalMediaDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -67,6 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				003DF9D82DFBA6940093BEB8 /* PhysicalMediaKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,12 +107,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		003DF9D72DFBA6940093BEB8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		00F299832DCBDB1B0095A089 = {
 			isa = PBXGroup;
 			children = (
 				003DF9D52DFB91890093BEB8 /* README.md */,
 				00F2998F2DCBDB1B0095A089 /* PhysicalMediaKit */,
 				003DF9C92DFB89220093BEB8 /* PhysicalMediaDemo */,
+				003DF9D72DFBA6940093BEB8 /* Frameworks */,
 				00F2998E2DCBDB1B0095A089 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -119,10 +154,12 @@
 				003DF9C42DFB89210093BEB8 /* Sources */,
 				003DF9C52DFB89210093BEB8 /* Frameworks */,
 				003DF9C62DFB89210093BEB8 /* Resources */,
+				003DF9DC2DFBA6940093BEB8 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				003DF9DB2DFBA6940093BEB8 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				003DF9C92DFB89220093BEB8 /* PhysicalMediaDemo */,
@@ -229,6 +266,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		003DF9DB2DFBA6940093BEB8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 00F2998C2DCBDB1B0095A089 /* PhysicalMediaKit */;
+			targetProxy = 003DF9DA2DFBA6940093BEB8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		003DF9D12DFB89240093BEB8 /* Debug */ = {

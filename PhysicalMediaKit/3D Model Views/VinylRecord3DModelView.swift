@@ -17,6 +17,16 @@ struct VinylRecord3DModelView: View {
     @State private var rotationX: Float = 0
     @State private var rotationY: Float = 0
     
+    //@State private var albumArt: Image
+    @State private var vinylColor: Color
+    @State private var vinylOpacity: Float
+    
+    public init(/*albumArt: Image, */_ vinylColor: Color, _ vinylOpacity: Float) {
+        //self.albumArt = albumArt
+        self.vinylColor = vinylColor
+        self.vinylOpacity = vinylOpacity
+    }
+    
     var body: some View {
         RealityView { content in
             do {
@@ -112,8 +122,8 @@ struct VinylRecord3DModelView: View {
                         throw MaterialError.failedToLoadMaterial
                     }
                     
-                    try plastic.setParameter(name: "vinylColor", value: .color(.init(red: 0.0, green: 1.0, blue: 0.0, alpha: 1)))
-                    try plastic.setParameter(name: "vinylOpacity", value: .float(0.2))
+                    try plastic.setParameter(name: "vinylColor", value: .color(UIColor(vinylColor)))
+                    try plastic.setParameter(name: "vinylOpacity", value: .float(vinylOpacity))
                     
                     return plastic
                 }
@@ -167,6 +177,6 @@ struct VinylRecord3DModelView: View {
     }
 }
 
-#Preview {
-    VinylRecord3DModelView()
-}
+//#Preview {
+//    VinylRecord3DModelView()
+//}

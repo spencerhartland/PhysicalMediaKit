@@ -10,7 +10,7 @@ import PhysicalMediaKit
 
 struct ContentView: View {
     var body: some View {
-        PhysicalMedia.vinylRecord
+        PhysicalMedia.vinylRecord(vinylColor: .orange, vinylOpacity: 0.8)
     }
 }
 
