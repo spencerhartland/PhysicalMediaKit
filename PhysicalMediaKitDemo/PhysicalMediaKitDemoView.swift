@@ -1,6 +1,6 @@
 //
-//  ContentView.swift
-//  PhysicalMediaDemo
+//  PhysicalMediaKitDemoView.swift
+//  PhysicalMediaKitDemo
 //
 //  Created by Spencer Hartland on 6/12/25.
 //
@@ -8,29 +8,40 @@
 import SwiftUI
 import PhysicalMediaKit
 
-fileprivate enum MediaType {
-    case vinylRecord
-    case compactDisc
-    case compactCassette
+fileprivate enum MediaType: String {
+    case vinylRecord = "Vinyl Record"
+    case compactDisc = "Compact Disc"
+    case compactCassette = "Compact Cassette"
 }
 
-struct ContentView: View {
+struct PhysicalMediaKitDemoView: View {
+    private let viewTitle = "PhysicalMediaKit Demo"
+    private let mediaTypePickerTitle = "Media Type"
+    private let modelReloadLabelText = "Loading model..."
+    private let modelReloadSymbolName = "progress.indicator"
+    private let albumArtworkURLLabelText = "Album Artwork URL"
+    private let albumArtworkURLPromptText = "https:/example.com/artwork"
+    private let albumArtworkURLSymbolName = "globe"
+    private let mediaColorLabelText = "Media Color"
+    private let mediaOpacityLabelText = "Media Opacity"
+    private let modelScaleLabelText = "Model Scale"
+    
     @State private var albumArtURLString = "https://media.pitchfork.com/photos/5f63d96c291a3fedd683eb5d/master/pass/&&&&&_arca.jpg"
     @State private var selectedMediaType: MediaType = .vinylRecord
-    @State private var mediaColor: Color = .black
-    @State private var mediaOpacity: Float = 1.0
-    @State private var modelScale: Float = 0.5
+    @State private var mediaColor: Color = .pink
+    @State private var mediaOpacity: Float = 0.5
+    @State private var modelScale: Float = 0.8
     @State private var modelRequiresReload = false
     
     var body: some View {
         VStack {
-            Text("PhysicalMediaKit Demo")
+            Text(viewTitle)
                 .font(.body.bold())
             
-            Picker("Media Type", selection: $selectedMediaType) {
-                Text("Vinyl Record").tag(MediaType.vinylRecord)
-                Text("Compact Disc").tag(MediaType.compactDisc)
-                Text("Compact Cassette").tag(MediaType.compactCassette)
+            Picker(mediaTypePickerTitle, selection: $selectedMediaType) {
+                Text(MediaType.vinylRecord.rawValue).tag(MediaType.vinylRecord)
+                Text(MediaType.compactDisc.rawValue).tag(MediaType.compactDisc)
+                Text(MediaType.compactCassette.rawValue).tag(MediaType.compactCassette)
             }
             .pickerStyle(.segmented)
             
@@ -59,16 +70,16 @@ struct ContentView: View {
                 }
             } else {
                 Spacer()
-                Label("Loading model...", systemImage: "progress.indicator")
+                Label(modelReloadLabelText, systemImage: modelReloadSymbolName)
                     .symbolEffect(.variableColor.iterative)
                 Spacer()
             }
             
             VStack {
                 VStack(alignment: .leading) {
-                    Label("Album Artwork URL", systemImage: "globe")
+                    Label(albumArtworkURLLabelText, systemImage: albumArtworkURLSymbolName)
                         .font(.caption.bold())
-                    TextField("Album Artwork URL", text: $albumArtURLString, prompt: Text("https:/example.com/artwork"))
+                    TextField(albumArtworkURLLabelText, text: $albumArtURLString, prompt: Text(albumArtworkURLPromptText))
                         .padding(.horizontal)
                         .padding(.vertical, 6)
                         .background(Color(UIColor.systemFill))
@@ -79,7 +90,7 @@ struct ContentView: View {
                 .cornerRadius(8)
                 
                 if selectedMediaType != .compactDisc {
-                    ColorPicker("Media Color", selection: $mediaColor)
+                    ColorPicker(mediaColorLabelText, selection: $mediaColor)
                         .padding(.horizontal)
                         .padding(.vertical, 6)
                         .background(Color(UIColor.secondarySystemBackground))
@@ -87,7 +98,7 @@ struct ContentView: View {
                         .font(.caption.bold())
                     
                     VStack(alignment: .leading) {
-                        Text("Media Opacity")
+                        Text(mediaOpacityLabelText)
                             .font(.caption.bold())
                         Slider(value: $mediaOpacity, in: 0.0...1.0)
                     }
@@ -98,7 +109,7 @@ struct ContentView: View {
                 }
                 
                 VStack(alignment: .leading) {
-                    Text("Model Scale")
+                    Text(modelScaleLabelText)
                         .font(.caption.bold())
                     Slider(value: $modelScale, in: 0.0...1.0)
                 }
@@ -130,5 +141,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    PhysicalMediaKitDemoView()
 }

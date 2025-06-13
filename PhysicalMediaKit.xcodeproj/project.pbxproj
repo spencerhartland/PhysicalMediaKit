@@ -37,20 +37,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		003DF9C82DFB89210093BEB8 /* PhysicalMediaDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhysicalMediaDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		003DF9C82DFB89210093BEB8 /* PhysicalMediaKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhysicalMediaKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		003DF9D52DFB91890093BEB8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		00F2998D2DCBDB1B0095A089 /* PhysicalMediaKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PhysicalMediaKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		003DF9D42DFB8A2C0093BEB8 /* Exceptions for "PhysicalMediaKit" folder in "PhysicalMediaDemo" target */ = {
+		003DF9D42DFB8A2C0093BEB8 /* Exceptions for "PhysicalMediaKit" folder in "PhysicalMediaKitDemo" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Assets/cassette.usdz,
 				Assets/cd.usdz,
 				Assets/vinyl_record.usdz,
 			);
-			target = 003DF9C72DFB89210093BEB8 /* PhysicalMediaDemo */;
+			target = 003DF9C72DFB89210093BEB8 /* PhysicalMediaKitDemo */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -74,16 +74,16 @@
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		003DF9C92DFB89220093BEB8 /* PhysicalMediaDemo */ = {
+		003DF9C92DFB89220093BEB8 /* PhysicalMediaKitDemo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = PhysicalMediaDemo;
+			path = PhysicalMediaKitDemo;
 			sourceTree = "<group>";
 		};
 		00F2998F2DCBDB1B0095A089 /* PhysicalMediaKit */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				00BD37042DEB7F500058C303 /* Exceptions for "PhysicalMediaKit" folder in "Headers" phase from "PhysicalMediaKit" target */,
-				003DF9D42DFB8A2C0093BEB8 /* Exceptions for "PhysicalMediaKit" folder in "PhysicalMediaDemo" target */,
+				003DF9D42DFB8A2C0093BEB8 /* Exceptions for "PhysicalMediaKit" folder in "PhysicalMediaKitDemo" target */,
 			);
 			path = PhysicalMediaKit;
 			sourceTree = "<group>";
@@ -121,7 +121,7 @@
 			children = (
 				003DF9D52DFB91890093BEB8 /* README.md */,
 				00F2998F2DCBDB1B0095A089 /* PhysicalMediaKit */,
-				003DF9C92DFB89220093BEB8 /* PhysicalMediaDemo */,
+				003DF9C92DFB89220093BEB8 /* PhysicalMediaKitDemo */,
 				003DF9D72DFBA6940093BEB8 /* Frameworks */,
 				00F2998E2DCBDB1B0095A089 /* Products */,
 			);
@@ -131,7 +131,7 @@
 			isa = PBXGroup;
 			children = (
 				00F2998D2DCBDB1B0095A089 /* PhysicalMediaKit.framework */,
-				003DF9C82DFB89210093BEB8 /* PhysicalMediaDemo.app */,
+				003DF9C82DFB89210093BEB8 /* PhysicalMediaKitDemo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -149,9 +149,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		003DF9C72DFB89210093BEB8 /* PhysicalMediaDemo */ = {
+		003DF9C72DFB89210093BEB8 /* PhysicalMediaKitDemo */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 003DF9D02DFB89240093BEB8 /* Build configuration list for PBXNativeTarget "PhysicalMediaDemo" */;
+			buildConfigurationList = 003DF9D02DFB89240093BEB8 /* Build configuration list for PBXNativeTarget "PhysicalMediaKitDemo" */;
 			buildPhases = (
 				003DF9C42DFB89210093BEB8 /* Sources */,
 				003DF9C52DFB89210093BEB8 /* Frameworks */,
@@ -164,13 +164,13 @@
 				003DF9DB2DFBA6940093BEB8 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				003DF9C92DFB89220093BEB8 /* PhysicalMediaDemo */,
+				003DF9C92DFB89220093BEB8 /* PhysicalMediaKitDemo */,
 			);
-			name = PhysicalMediaDemo;
+			name = PhysicalMediaKitDemo;
 			packageProductDependencies = (
 			);
 			productName = PhysicalMediaDemo;
-			productReference = 003DF9C82DFB89210093BEB8 /* PhysicalMediaDemo.app */;
+			productReference = 003DF9C82DFB89210093BEB8 /* PhysicalMediaKitDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
 		00F2998C2DCBDB1B0095A089 /* PhysicalMediaKit */ = {
@@ -229,7 +229,7 @@
 			projectRoot = "";
 			targets = (
 				00F2998C2DCBDB1B0095A089 /* PhysicalMediaKit */,
-				003DF9C72DFB89210093BEB8 /* PhysicalMediaDemo */,
+				003DF9C72DFB89210093BEB8 /* PhysicalMediaKitDemo */,
 			);
 		};
 /* End PBXProject section */
@@ -281,18 +281,20 @@
 		003DF9D12DFB89240093BEB8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "PhysicalMediaKit Demo App Icon";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4M48D4QJHN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Physical Media";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -302,29 +304,35 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.spencerhartland.PhysicalMediaDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		003DF9D22DFB89240093BEB8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "PhysicalMediaKit Demo App Icon";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4M48D4QJHN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Physical Media";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -334,11 +342,15 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.spencerhartland.PhysicalMediaDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -490,7 +502,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -526,7 +538,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -550,7 +562,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		003DF9D02DFB89240093BEB8 /* Build configuration list for PBXNativeTarget "PhysicalMediaDemo" */ = {
+		003DF9D02DFB89240093BEB8 /* Build configuration list for PBXNativeTarget "PhysicalMediaKitDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				003DF9D12DFB89240093BEB8 /* Debug */,

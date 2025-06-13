@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "003DF9C72DFB89210093BEB8"
-               BuildableName = "PhysicalMediaDemo.app"
-               BlueprintName = "PhysicalMediaDemo"
+               BuildableName = "PhysicalMediaKitDemo.app"
+               BlueprintName = "PhysicalMediaKitDemo"
                ReferencedContainer = "container:PhysicalMediaKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,8 +45,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "003DF9C72DFB89210093BEB8"
-            BuildableName = "PhysicalMediaDemo.app"
-            BlueprintName = "PhysicalMediaDemo"
+            BuildableName = "PhysicalMediaKitDemo.app"
+            BlueprintName = "PhysicalMediaKitDemo"
             ReferencedContainer = "container:PhysicalMediaKit.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -62,8 +62,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "003DF9C72DFB89210093BEB8"
-            BuildableName = "PhysicalMediaDemo.app"
-            BlueprintName = "PhysicalMediaDemo"
+            BuildableName = "PhysicalMediaKitDemo.app"
+            BlueprintName = "PhysicalMediaKitDemo"
             ReferencedContainer = "container:PhysicalMediaKit.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

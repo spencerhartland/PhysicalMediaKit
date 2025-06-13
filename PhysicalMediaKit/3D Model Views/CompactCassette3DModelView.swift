@@ -25,7 +25,7 @@ struct CompactCassette3DModelView: View {
     private let albumArtParameterName = "albumArt"
     private let cassetteColorParameterName = "cassetteColor"
     private let cassetteOpacityParameterName = "cassetteOpacity"
-    private let defaultModelScaleFactor: Float = 10.0
+    private let defaultModelScaleFactor: Float = 20.0
     private let attractLoopDelay: Double = 4
     
     @State private var dragGestureActive = false
