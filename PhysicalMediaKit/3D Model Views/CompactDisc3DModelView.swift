@@ -92,7 +92,7 @@ struct CompactDisc3DModelView: View {
                 do {
                     try part.modifyMaterials { material in
                         guard var booklet = material as? ShaderGraphMaterial else {
-                            throw MaterialError.failedToLoadMaterial
+                            throw PhysicalMediaError.failedToLoadMaterial
                         }
                         
                         try booklet.setParameter(

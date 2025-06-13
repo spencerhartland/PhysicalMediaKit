@@ -17,12 +17,12 @@ struct VinylRecord3DModelView: View {
     @State private var rotationX: Float = 0
     @State private var rotationY: Float = 0
     
-    //@State private var albumArt: Image
+    @State private var albumArtURL: URL
     @State private var vinylColor: Color
     @State private var vinylOpacity: Float
     
-    public init(/*albumArt: Image, */_ vinylColor: Color, _ vinylOpacity: Float) {
-        //self.albumArt = albumArt
+    public init(_ albumArtURL: URL, _ vinylColor: Color, _ vinylOpacity: Float) {
+        self.albumArtURL = albumArtURL
         self.vinylColor = vinylColor
         self.vinylOpacity = vinylOpacity
     }
@@ -34,7 +34,7 @@ struct VinylRecord3DModelView: View {
                 entity.name = entityName
                 entity.setScale(.init(x: modelScaleFactor, y: modelScaleFactor, z: modelScaleFactor), relativeTo: entity)
                 entity.generateCollisionShapes(recursive: true)
-                updateSleeveMaterial(for: entity)
+                await updateSleeveMaterial(for: entity)
                 updateVinylMaterial(for: entity)
                 content.add(entity)
             } catch {
@@ -95,13 +95,25 @@ struct VinylRecord3DModelView: View {
         }
     }
     
-    private func updateSleeveMaterial(for parent: Entity) {
-        if let sleeve = parent.findEntity(named: "vinyl_record_jacket_1420_paper"),
-           let texture = try? TextureResource.load(named: "album_art.png") {
+    private func updateSleeveMaterial(for parent: Entity) async {
+        if let sleeve = parent.findEntity(named: "vinyl_record_jacket_1420_paper") {
             do {
+                // Download album art
+                guard let (data, _) = try? await URLSession.shared.data(from: albumArtURL),
+                      let uiImage = UIImage(data: data),
+                      let cgImage = uiImage.cgImage else {
+                    throw PhysicalMediaError.failedToLoadAlbumArt
+                }
+                
+                // Generate texture from album art
+                guard let texture = try? await TextureResource(image: cgImage, options: .init(semantic: .color)) else {
+                    throw PhysicalMediaError.failedToGenerateTextureFromImage
+                }
+                
+                // Apply texture to vinyl record sleeve
                 try sleeve.modifyMaterials { material in
                     guard var paper = material as? ShaderGraphMaterial else {
-                        throw MaterialError.failedToLoadMaterial
+                        throw PhysicalMediaError.failedToLoadMaterial
                     }
                     
                     try paper.setParameter(name: "albumArt", value: .textureResource(texture))
@@ -119,7 +131,7 @@ struct VinylRecord3DModelView: View {
             do {
                 try vinyl.modifyMaterials { material in
                     guard var plastic = material as? ShaderGraphMaterial else {
-                        throw MaterialError.failedToLoadMaterial
+                        throw PhysicalMediaError.failedToLoadMaterial
                     }
                     
                     try plastic.setParameter(name: "vinylColor", value: .color(UIColor(vinylColor)))

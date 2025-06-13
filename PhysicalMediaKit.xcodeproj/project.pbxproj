@@ -59,14 +59,14 @@
 				"3D Model Views/VinylRecord3DModelView.swift" = (Private, );
 				PhysicalMediaKit.swift = (Public, );
 				Support/EntityExtension.swift = (Private, );
-				Support/MaterialError.swift = (Private, );
+				Support/PhysicalMediaError.swift = (Private, );
 			};
 			buildPhase = 00F299882DCBDB1B0095A089 /* Headers */;
 			membershipExceptions = (
 				"3D Model Views/VinylRecord3DModelView.swift",
 				PhysicalMediaKit.swift,
 				Support/EntityExtension.swift,
-				Support/MaterialError.swift,
+				Support/PhysicalMediaError.swift,
 			);
 		};
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */

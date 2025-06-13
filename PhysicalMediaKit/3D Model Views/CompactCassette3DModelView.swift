@@ -103,7 +103,7 @@ struct CompactCassette3DModelView: View {
             do {
                 try cover.modifyMaterials { material in
                     guard var paper = material as? ShaderGraphMaterial else {
-                        throw MaterialError.failedToLoadMaterial
+                        throw PhysicalMediaError.failedToLoadMaterial
                     }
                     
                     try paper.setParameter(
@@ -125,7 +125,7 @@ struct CompactCassette3DModelView: View {
                 do {
                     try part.modifyMaterials { material in
                         guard var plastic = material as? ShaderGraphMaterial else {
-                            throw MaterialError.failedToLoadMaterial
+                            throw PhysicalMediaError.failedToLoadMaterial
                         }
                         
                         try plastic.setParameter(
