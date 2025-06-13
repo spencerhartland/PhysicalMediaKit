@@ -10,21 +10,30 @@ import RealityKit
 
 struct VinylRecord3DModelView: View {
     private let entityName = "vinyl_record"
-    private let modelScaleFactor: Float = 5
+    private let vinylRecordSleevePartName = "vinyl_record_jacket_1420_paper"
+    private let vinylRecordVinylPartName = "vinyl_record_jacket_1420_plastic"
+    private let albumArtParameterName = "albumArt"
+    private let vinylColorParameterName = "vinylColor"
+    private let vinylOpacityParameterName = "vinylOpacity"
+    private let defaultModelScaleFactor: Float = 10.0
     private let attractLoopDelay: Double = 4
     
+    // Attract loop drag gesture reset state
     @State private var dragGestureActive = false
     @State private var rotationX: Float = 0
     @State private var rotationY: Float = 0
     
+    // Customizable params
     @State private var albumArtURL: URL
     @State private var vinylColor: Color
     @State private var vinylOpacity: Float
+    @State private var modelScaleFactor: Float
     
-    public init(_ albumArtURL: URL, _ vinylColor: Color, _ vinylOpacity: Float) {
+    public init(_ albumArtURL: URL, _ vinylColor: Color, _ vinylOpacity: Float,_ scale: Float = 1.0) {
         self.albumArtURL = albumArtURL
         self.vinylColor = vinylColor
         self.vinylOpacity = vinylOpacity
+        self.modelScaleFactor = scale * defaultModelScaleFactor
     }
     
     var body: some View {
@@ -96,7 +105,7 @@ struct VinylRecord3DModelView: View {
     }
     
     private func updateSleeveMaterial(for parent: Entity) async {
-        if let sleeve = parent.findEntity(named: "vinyl_record_jacket_1420_paper") {
+        if let sleeve = parent.findEntity(named: vinylRecordSleevePartName) {
             do {
                 // Download album art
                 guard let (data, _) = try? await URLSession.shared.data(from: albumArtURL),
@@ -116,7 +125,7 @@ struct VinylRecord3DModelView: View {
                         throw PhysicalMediaError.failedToLoadMaterial
                     }
                     
-                    try paper.setParameter(name: "albumArt", value: .textureResource(texture))
+                    try paper.setParameter(name: albumArtParameterName, value: .textureResource(texture))
                     
                     return paper
                 }
@@ -127,15 +136,15 @@ struct VinylRecord3DModelView: View {
     }
     
     private func updateVinylMaterial(for parent: Entity) {
-        if let vinyl = parent.findEntity(named: "vinyl_record_jacket_1420_plastic") {
+        if let vinyl = parent.findEntity(named: vinylRecordVinylPartName) {
             do {
                 try vinyl.modifyMaterials { material in
                     guard var plastic = material as? ShaderGraphMaterial else {
                         throw PhysicalMediaError.failedToLoadMaterial
                     }
                     
-                    try plastic.setParameter(name: "vinylColor", value: .color(UIColor(vinylColor)))
-                    try plastic.setParameter(name: "vinylOpacity", value: .float(vinylOpacity))
+                    try plastic.setParameter(name: vinylColorParameterName, value: .color(UIColor(vinylColor)))
+                    try plastic.setParameter(name: vinylOpacityParameterName, value: .float(vinylOpacity))
                     
                     return plastic
                 }
