@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		003DF9D62DFB91930093BEB8 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 003DF9D52DFB91890093BEB8 /* README.md */; };
-		00513F1E2DFF3F14001149BD /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 00513F1B2DFF3F14001149BD /* .gitignore */; };
 		00513F452DFF409C001149BD /* PhysicalMediaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 00513F442DFF409C001149BD /* PhysicalMediaKit */; };
+		00FD7BBD2DFF5A1200F95DA6 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 00FD7BBC2DFF5A1200F95DA6 /* .gitignore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,13 +33,13 @@
 		00513EF92DFF3C3F001149BD /* vinyl_record.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = vinyl_record.usdz; sourceTree = "<group>"; };
 		00513EFE2DFF3C3F001149BD /* PhysicalMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicalMedia.swift; sourceTree = "<group>"; };
 		00513F182DFF3F14001149BD /* PhysicalMediaKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicalMediaKitTests.swift; sourceTree = "<group>"; };
-		00513F1B2DFF3F14001149BD /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		00513F1C2DFF3F14001149BD /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		00513F2C2DFF3FFD001149BD /* CompactCassette3DModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCassette3DModelView.swift; sourceTree = "<group>"; };
 		00513F2D2DFF3FFD001149BD /* CompactDisc3DModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactDisc3DModelView.swift; sourceTree = "<group>"; };
 		00513F2E2DFF3FFD001149BD /* VinylRecord3DModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VinylRecord3DModelView.swift; sourceTree = "<group>"; };
 		00513F3C2DFF4008001149BD /* EntityExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityExtension.swift; sourceTree = "<group>"; };
 		00513F3D2DFF4008001149BD /* PhysicalMediaError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicalMediaError.swift; sourceTree = "<group>"; };
+		00FD7BBC2DFF5A1200F95DA6 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -102,7 +102,6 @@
 			children = (
 				00513F172DFF3F14001149BD /* Sources */,
 				00513F1A2DFF3F14001149BD /* Tests */,
-				00513F1B2DFF3F14001149BD /* .gitignore */,
 				00513F1C2DFF3F14001149BD /* Package.swift */,
 			);
 			path = PhysicalMediaKit;
@@ -141,6 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				003DF9D52DFB91890093BEB8 /* README.md */,
+				00FD7BBC2DFF5A1200F95DA6 /* .gitignore */,
 				00513F1D2DFF3F14001149BD /* PhysicalMediaKit */,
 				003DF9C92DFB89220093BEB8 /* PhysicalMediaKitDemo */,
 				00F2998E2DCBDB1B0095A089 /* Products */,
@@ -224,7 +224,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00513F1E2DFF3F14001149BD /* .gitignore in Resources */,
+				00FD7BBD2DFF5A1200F95DA6 /* .gitignore in Resources */,
 				003DF9D62DFB91930093BEB8 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
