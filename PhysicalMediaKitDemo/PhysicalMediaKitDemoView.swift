@@ -26,7 +26,7 @@ struct PhysicalMediaKitDemoView: View {
     private let mediaOpacityLabelText = "Media Opacity"
     private let modelScaleLabelText = "Model Scale"
     
-    @State private var albumArtURLString = "https://media.pitchfork.com/photos/5f63d96c291a3fedd683eb5d/master/pass/&&&&&_arca.jpg"
+    @State private var albumArtURLString = "https://www.rollingstone.com/wp-content/uploads/2025/06/Addison-Rae_FRONT-COVER-final-crop.jpg?w=1024"
     @State private var selectedMediaType: MediaType = .vinylRecord
     @State private var mediaColor: Color = .pink
     @State private var mediaOpacity: Float = 0.5

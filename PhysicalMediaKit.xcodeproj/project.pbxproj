@@ -8,28 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		003DF9D62DFB91930093BEB8 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 003DF9D52DFB91890093BEB8 /* README.md */; };
-		003DF9D82DFBA6940093BEB8 /* PhysicalMediaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00F2998D2DCBDB1B0095A089 /* PhysicalMediaKit.framework */; };
-		003DF9D92DFBA6940093BEB8 /* PhysicalMediaKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 00F2998D2DCBDB1B0095A089 /* PhysicalMediaKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		00513F1E2DFF3F14001149BD /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 00513F1B2DFF3F14001149BD /* .gitignore */; };
+		00513F452DFF409C001149BD /* PhysicalMediaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 00513F442DFF409C001149BD /* PhysicalMediaKit */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		003DF9DA2DFBA6940093BEB8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 00F299842DCBDB1B0095A089 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 00F2998C2DCBDB1B0095A089;
-			remoteInfo = PhysicalMediaKit;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
-		003DF9DC2DFBA6940093BEB8 /* Embed Frameworks */ = {
+		00665DA52DFE59BA00C9D72C /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				003DF9D92DFBA6940093BEB8 /* PhysicalMediaKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -39,53 +28,24 @@
 /* Begin PBXFileReference section */
 		003DF9C82DFB89210093BEB8 /* PhysicalMediaKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhysicalMediaKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		003DF9D52DFB91890093BEB8 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		00F2998D2DCBDB1B0095A089 /* PhysicalMediaKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PhysicalMediaKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		00513EF72DFF3C3F001149BD /* cassette.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = cassette.usdz; sourceTree = "<group>"; };
+		00513EF82DFF3C3F001149BD /* cd.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = cd.usdz; sourceTree = "<group>"; };
+		00513EF92DFF3C3F001149BD /* vinyl_record.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = vinyl_record.usdz; sourceTree = "<group>"; };
+		00513EFE2DFF3C3F001149BD /* PhysicalMedia.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicalMedia.swift; sourceTree = "<group>"; };
+		00513F182DFF3F14001149BD /* PhysicalMediaKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicalMediaKitTests.swift; sourceTree = "<group>"; };
+		00513F1B2DFF3F14001149BD /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		00513F1C2DFF3F14001149BD /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		00513F2C2DFF3FFD001149BD /* CompactCassette3DModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCassette3DModelView.swift; sourceTree = "<group>"; };
+		00513F2D2DFF3FFD001149BD /* CompactDisc3DModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactDisc3DModelView.swift; sourceTree = "<group>"; };
+		00513F2E2DFF3FFD001149BD /* VinylRecord3DModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VinylRecord3DModelView.swift; sourceTree = "<group>"; };
+		00513F3C2DFF4008001149BD /* EntityExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityExtension.swift; sourceTree = "<group>"; };
+		00513F3D2DFF4008001149BD /* PhysicalMediaError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicalMediaError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		003DF9D42DFB8A2C0093BEB8 /* Exceptions for "PhysicalMediaKit" folder in "PhysicalMediaKitDemo" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Assets/cassette.usdz,
-				Assets/cd.usdz,
-				Assets/vinyl_record.usdz,
-			);
-			target = 003DF9C72DFB89210093BEB8 /* PhysicalMediaKitDemo */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		00BD37042DEB7F500058C303 /* Exceptions for "PhysicalMediaKit" folder in "Headers" phase from "PhysicalMediaKit" target */ = {
-			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
-			attributesByRelativePath = {
-				"3D Model Views/VinylRecord3DModelView.swift" = (Private, );
-				PhysicalMedia.swift = (Public, );
-				Support/EntityExtension.swift = (Private, );
-				Support/PhysicalMediaError.swift = (Private, );
-			};
-			buildPhase = 00F299882DCBDB1B0095A089 /* Headers */;
-			membershipExceptions = (
-				"3D Model Views/VinylRecord3DModelView.swift",
-				PhysicalMedia.swift,
-				Support/EntityExtension.swift,
-				Support/PhysicalMediaError.swift,
-			);
-		};
-/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		003DF9C92DFB89220093BEB8 /* PhysicalMediaKitDemo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = PhysicalMediaKitDemo;
-			sourceTree = "<group>";
-		};
-		00F2998F2DCBDB1B0095A089 /* PhysicalMediaKit */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				00BD37042DEB7F500058C303 /* Exceptions for "PhysicalMediaKit" folder in "Headers" phase from "PhysicalMediaKit" target */,
-				003DF9D42DFB8A2C0093BEB8 /* Exceptions for "PhysicalMediaKit" folder in "PhysicalMediaKitDemo" target */,
-			);
-			path = PhysicalMediaKit;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -95,34 +55,94 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				003DF9D82DFBA6940093BEB8 /* PhysicalMediaKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		00F2998A2DCBDB1B0095A089 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				00513F452DFF409C001149BD /* PhysicalMediaKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		003DF9D72DFBA6940093BEB8 /* Frameworks */ = {
+		00513F162DFF3F14001149BD /* PhysicalMediaKit */ = {
 			isa = PBXGroup;
 			children = (
+				00513F222DFF3F7C001149BD /* Resources */,
+				00513F2F2DFF3FFD001149BD /* 3D Model Views */,
+				00513F3E2DFF4008001149BD /* Support */,
+				00513EFE2DFF3C3F001149BD /* PhysicalMedia.swift */,
 			);
-			name = Frameworks;
+			path = PhysicalMediaKit;
+			sourceTree = "<group>";
+		};
+		00513F172DFF3F14001149BD /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				00513F162DFF3F14001149BD /* PhysicalMediaKit */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		00513F192DFF3F14001149BD /* PhysicalMediaKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				00513F182DFF3F14001149BD /* PhysicalMediaKitTests.swift */,
+			);
+			path = PhysicalMediaKitTests;
+			sourceTree = "<group>";
+		};
+		00513F1A2DFF3F14001149BD /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				00513F192DFF3F14001149BD /* PhysicalMediaKitTests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		00513F1D2DFF3F14001149BD /* PhysicalMediaKit */ = {
+			isa = PBXGroup;
+			children = (
+				00513F172DFF3F14001149BD /* Sources */,
+				00513F1A2DFF3F14001149BD /* Tests */,
+				00513F1B2DFF3F14001149BD /* .gitignore */,
+				00513F1C2DFF3F14001149BD /* Package.swift */,
+			);
+			path = PhysicalMediaKit;
+			sourceTree = "<group>";
+		};
+		00513F222DFF3F7C001149BD /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				00513EF72DFF3C3F001149BD /* cassette.usdz */,
+				00513EF82DFF3C3F001149BD /* cd.usdz */,
+				00513EF92DFF3C3F001149BD /* vinyl_record.usdz */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		00513F2F2DFF3FFD001149BD /* 3D Model Views */ = {
+			isa = PBXGroup;
+			children = (
+				00513F2C2DFF3FFD001149BD /* CompactCassette3DModelView.swift */,
+				00513F2D2DFF3FFD001149BD /* CompactDisc3DModelView.swift */,
+				00513F2E2DFF3FFD001149BD /* VinylRecord3DModelView.swift */,
+			);
+			path = "3D Model Views";
+			sourceTree = "<group>";
+		};
+		00513F3E2DFF4008001149BD /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				00513F3C2DFF4008001149BD /* EntityExtension.swift */,
+				00513F3D2DFF4008001149BD /* PhysicalMediaError.swift */,
+			);
+			path = Support;
 			sourceTree = "<group>";
 		};
 		00F299832DCBDB1B0095A089 = {
 			isa = PBXGroup;
 			children = (
 				003DF9D52DFB91890093BEB8 /* README.md */,
-				00F2998F2DCBDB1B0095A089 /* PhysicalMediaKit */,
+				00513F1D2DFF3F14001149BD /* PhysicalMediaKit */,
 				003DF9C92DFB89220093BEB8 /* PhysicalMediaKitDemo */,
-				003DF9D72DFBA6940093BEB8 /* Frameworks */,
 				00F2998E2DCBDB1B0095A089 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -130,23 +150,12 @@
 		00F2998E2DCBDB1B0095A089 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				00F2998D2DCBDB1B0095A089 /* PhysicalMediaKit.framework */,
 				003DF9C82DFB89210093BEB8 /* PhysicalMediaKitDemo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
-
-/* Begin PBXHeadersBuildPhase section */
-		00F299882DCBDB1B0095A089 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		003DF9C72DFB89210093BEB8 /* PhysicalMediaKitDemo */ = {
@@ -156,45 +165,22 @@
 				003DF9C42DFB89210093BEB8 /* Sources */,
 				003DF9C52DFB89210093BEB8 /* Frameworks */,
 				003DF9C62DFB89210093BEB8 /* Resources */,
-				003DF9DC2DFBA6940093BEB8 /* Embed Frameworks */,
+				00665DA52DFE59BA00C9D72C /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				003DF9DB2DFBA6940093BEB8 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				003DF9C92DFB89220093BEB8 /* PhysicalMediaKitDemo */,
 			);
 			name = PhysicalMediaKitDemo;
 			packageProductDependencies = (
+				00513F442DFF409C001149BD /* PhysicalMediaKit */,
 			);
 			productName = PhysicalMediaDemo;
 			productReference = 003DF9C82DFB89210093BEB8 /* PhysicalMediaKitDemo.app */;
 			productType = "com.apple.product-type.application";
-		};
-		00F2998C2DCBDB1B0095A089 /* PhysicalMediaKit */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 00F299942DCBDB1B0095A089 /* Build configuration list for PBXNativeTarget "PhysicalMediaKit" */;
-			buildPhases = (
-				00F299882DCBDB1B0095A089 /* Headers */,
-				00F299892DCBDB1B0095A089 /* Sources */,
-				00F2998A2DCBDB1B0095A089 /* Frameworks */,
-				00F2998B2DCBDB1B0095A089 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				00F2998F2DCBDB1B0095A089 /* PhysicalMediaKit */,
-			);
-			name = PhysicalMediaKit;
-			packageProductDependencies = (
-			);
-			productName = PhysicalMediaKit;
-			productReference = 00F2998D2DCBDB1B0095A089 /* PhysicalMediaKit.framework */;
-			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
@@ -209,9 +195,6 @@
 					003DF9C72DFB89210093BEB8 = {
 						CreatedOnToolsVersion = 26.0;
 					};
-					00F2998C2DCBDB1B0095A089 = {
-						CreatedOnToolsVersion = 16.3;
-					};
 				};
 			};
 			buildConfigurationList = 00F299872DCBDB1B0095A089 /* Build configuration list for PBXProject "PhysicalMediaKit" */;
@@ -223,12 +206,14 @@
 			);
 			mainGroup = 00F299832DCBDB1B0095A089;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				00513F432DFF409C001149BD /* XCLocalSwiftPackageReference "PhysicalMediaKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 00F2998E2DCBDB1B0095A089 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				00F2998C2DCBDB1B0095A089 /* PhysicalMediaKit */,
 				003DF9C72DFB89210093BEB8 /* PhysicalMediaKitDemo */,
 			);
 		};
@@ -239,14 +224,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00513F1E2DFF3F14001149BD /* .gitignore in Resources */,
 				003DF9D62DFB91930093BEB8 /* README.md in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		00F2998B2DCBDB1B0095A089 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,22 +239,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		00F299892DCBDB1B0095A089 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		003DF9DB2DFBA6940093BEB8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 00F2998C2DCBDB1B0095A089 /* PhysicalMediaKit */;
-			targetProxy = 003DF9DA2DFBA6940093BEB8 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		003DF9D12DFB89240093BEB8 /* Debug */ = {
@@ -487,78 +451,6 @@
 			};
 			name = Release;
 		};
-		00F299952DCBDB1B0095A089 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4M48D4QJHN;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MACH_O_TYPE = staticlib;
-				MARKETING_VERSION = 1.0;
-				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
-				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = com.spencerhartland.PhysicalMediaKit;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = NO;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_INSTALL_MODULE = YES;
-				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		00F299962DCBDB1B0095A089 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 4M48D4QJHN;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MACH_O_TYPE = staticlib;
-				MARKETING_VERSION = 1.0;
-				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
-				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = com.spencerhartland.PhysicalMediaKit;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = NO;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_INSTALL_MODULE = YES;
-				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -580,16 +472,21 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		00F299942DCBDB1B0095A089 /* Build configuration list for PBXNativeTarget "PhysicalMediaKit" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				00F299952DCBDB1B0095A089 /* Debug */,
-				00F299962DCBDB1B0095A089 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		00513F432DFF409C001149BD /* XCLocalSwiftPackageReference "PhysicalMediaKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = PhysicalMediaKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		00513F442DFF409C001149BD /* PhysicalMediaKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PhysicalMediaKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 00F299842DCBDB1B0095A089 /* Project object */;
 }

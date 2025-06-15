@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  CompactDisc3DModelView.swift
 //  TestingModel3D
 //
 //  Created by Spencer Hartland on 4/5/25.
@@ -8,55 +8,34 @@
 import SwiftUI
 import RealityKit
 
-struct CompactCassette3DModelView: View {
-    private let entityName = "cassette"
-    private let cassetteParts = [
-        "A",
-        "B",
-        "Cover_1",
-        "Cover_Holder",
-        "Holder_Glass",
-        "Push_1",
-        "Push_2",
-        "Cover_2",
-        "Cover_Holder_1",
-        "Holder_Glass_1"
-    ]
+struct CompactDisc3DModelView: View {
+    private let entityName = "cd"
+    private let cdBookletFrontPartName = "Booklet_Front"
+    private let cdBookletBackPartName = "Booklet_Back"
     private let albumArtParameterName = "albumArt"
-    private let cassetteColorParameterName = "cassetteColor"
-    private let cassetteOpacityParameterName = "cassetteOpacity"
-    private let defaultModelScaleFactor: Float = 20.0
+    private let defaultModelScaleFactor: Float = 10.0
     private let attractLoopDelay: Double = 4
     
     @State private var dragGestureActive = false
     @State private var rotationX: Float = 0
     @State private var rotationY: Float = 0
+    @State private var animationTimer: Timer? = nil
     
     @State private var albumArtURL: URL
-    @State private var cassetteColor: Color
-    @State private var cassetteOpacity: Float
     @State private var modelScaleFactor: Float
     
-    public init(
-        _ albumArtURL: URL,
-        _ cassetteColor: Color,
-        _ cassetteOpacity: Float,
-        _ scale: Float = 1.0
-    ) {
+    public init(_ albumArtURL: URL,_ scale: Float) {
         self.albumArtURL = albumArtURL
-        self.cassetteColor = cassetteColor
-        self.cassetteOpacity = cassetteOpacity
         self.modelScaleFactor = scale * defaultModelScaleFactor
     }
     
     var body: some View {
         RealityView { content in
-            if let entity = try? await Entity(named: entityName) {
+            if let entity = try? await Entity(named: entityName, in: .module) {
                 entity.name = entityName
                 entity.setScale(.init(x: modelScaleFactor, y: modelScaleFactor, z: modelScaleFactor), relativeTo: entity)
                 entity.generateCollisionShapes(recursive: true)
-                await updateCoverMaterial(for: entity)
-                updateCassetteMaterial(for: entity)
+                await updateBookletMaterial(for: entity)
                 content.add(entity)
             }
         } update: { content in
@@ -98,24 +77,31 @@ struct CompactCassette3DModelView: View {
         let initialX = rotationX
         let initialY = rotationY
         
-        Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { timer in
+        let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { timer in
             currentStep += 1
             let t = Float(currentStep) / Float(steps)
             let easeOut = 1 - pow(1 - t, 3) // cubic easing
-
-            rotationX = initialX * (1 - easeOut)
-            rotationY = initialY * (1 - easeOut)
-
-            if currentStep >= steps {
-                rotationX = 0
-                rotationY = 0
-                timer.invalidate()
+            
+            Task { @MainActor in
+                rotationX = initialX * (1 - easeOut)
+                rotationY = initialY * (1 - easeOut)
+                
+                if currentStep >= steps {
+                    rotationX = 0
+                    rotationY = 0
+                    animationTimer?.invalidate()
+                    animationTimer = nil
+                }
             }
         }
+        
+        RunLoop.main.add(timer, forMode: .common)
+        self.animationTimer = timer
     }
     
-    private func updateCoverMaterial(for parent: Entity) async {
-        if let cover = parent.findEntity(named: "Cover") {
+    private func updateBookletMaterial(for cd: Entity) async {
+        if let bookletFront = cd.findEntity(named: cdBookletFrontPartName),
+           let bookletBack = cd.findEntity(named: cdBookletBackPartName) {
             do {
                 // Download album art
                 guard let (data, _) = try? await URLSession.shared.data(from: albumArtURL),
@@ -124,13 +110,25 @@ struct CompactCassette3DModelView: View {
                     throw PhysicalMediaError.failedToLoadAlbumArt
                 }
                 
-                // Generate texture from image
+                // Generate texture from album art
                 guard let texture = try? await TextureResource(image: cgImage, options: .init(semantic: .color)) else {
                     throw PhysicalMediaError.failedToGenerateTextureFromImage
                 }
                 
-                // Apply texture to cassette cover
-                try cover.modifyMaterials { material in
+                try bookletFront.modifyMaterials { material in
+                    guard var paper = material as? ShaderGraphMaterial else {
+                        throw PhysicalMediaError.failedToLoadMaterial
+                    }
+                    
+                    try paper.setParameter(
+                        name: albumArtParameterName,
+                        value: .textureResource(texture)
+                    )
+                    
+                    return paper
+                }
+                
+                try bookletBack.modifyMaterials { material in
                     guard var paper = material as? ShaderGraphMaterial else {
                         throw PhysicalMediaError.failedToLoadMaterial
                     }
@@ -143,34 +141,7 @@ struct CompactCassette3DModelView: View {
                     return paper
                 }
             } catch {
-                print("Some error occurred")
-            }
-        }
-    }
-    
-    private func updateCassetteMaterial(for parent: Entity) {
-        for partName in cassetteParts {
-            if let part = parent.findEntity(named: partName) {
-                do {
-                    try part.modifyMaterials { material in
-                        guard var plastic = material as? ShaderGraphMaterial else {
-                            throw PhysicalMediaError.failedToLoadMaterial
-                        }
-                        
-                        try plastic.setParameter(
-                            name: cassetteColorParameterName,
-                            value: .color(UIColor(cassetteColor))
-                        )
-                        try plastic.setParameter(
-                            name: cassetteOpacityParameterName,
-                            value: .float(cassetteOpacity)
-                        )
-                        
-                        return plastic
-                    }
-                } catch {
-                    print("Some error occurred")
-                }
+                print("Some error occurred: \(error)")
             }
         }
     }
@@ -187,34 +158,42 @@ struct CompactCassette3DModelView: View {
         rotationX = 0
         rotationY = 0
         
-        Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { timer in
-            if dragGestureActive { timer.invalidate() }
-            
-            let phaseOneProgress = Float(phaseOneStep) / (Float(steps)/4.0)
-            let phaseTwoProgress = Float(phaseTwoStep) / (Float(steps)/4.0)
-            let phaseThreeProgress = Float(phaseThreeStep) / (Float(steps)/4.0)
-            let phaseFourProgress = Float(phaseFourStep) / (Float(steps)/4.0)
-            
-            if phaseOneProgress < 1 {
-                phaseOneStep += 1
-                rotationY = 0.25 * phaseOneProgress
-            } else if phaseTwoProgress < 1 {
-                phaseTwoStep += 1
-                rotationY = (-0.25 * phaseTwoProgress) + 0.25
-            } else if phaseThreeProgress < 1 {
-                phaseThreeStep += 1
-                rotationY = -0.25 * phaseThreeProgress
-            } else {
-                phaseFourStep += 1
-                rotationY = (0.25 * phaseFourProgress) - 0.25
-            }
-            
-            if phaseFourProgress >= 1 {
-                phaseOneStep = 0
-                phaseTwoStep = 0
-                phaseThreeStep = 0
-                phaseFourStep = 0
+        let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { timer in
+            Task { @MainActor in
+                if dragGestureActive {
+                    animationTimer?.invalidate()
+                    animationTimer = nil
+                }
+                
+                let phaseOneProgress = Float(phaseOneStep) / (Float(steps)/4.0)
+                let phaseTwoProgress = Float(phaseTwoStep) / (Float(steps)/4.0)
+                let phaseThreeProgress = Float(phaseThreeStep) / (Float(steps)/4.0)
+                let phaseFourProgress = Float(phaseFourStep) / (Float(steps)/4.0)
+                
+                if phaseOneProgress < 1 {
+                    phaseOneStep += 1
+                    rotationY = 0.25 * phaseOneProgress
+                } else if phaseTwoProgress < 1 {
+                    phaseTwoStep += 1
+                    rotationY = (-0.25 * phaseTwoProgress) + 0.25
+                } else if phaseThreeProgress < 1 {
+                    phaseThreeStep += 1
+                    rotationY = -0.25 * phaseThreeProgress
+                } else {
+                    phaseFourStep += 1
+                    rotationY = (0.25 * phaseFourProgress) - 0.25
+                }
+                
+                if phaseFourProgress >= 1 {
+                    phaseOneStep = 0
+                    phaseTwoStep = 0
+                    phaseThreeStep = 0
+                    phaseFourStep = 0
+                }
             }
         }
+        
+        RunLoop.main.add(timer, forMode: .common)
+        self.animationTimer = timer
     }
 }

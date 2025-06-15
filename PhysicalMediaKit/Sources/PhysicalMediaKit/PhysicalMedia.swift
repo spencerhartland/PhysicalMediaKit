@@ -8,6 +8,7 @@
 import SwiftUI
 
 /// Provides methods to render customizable, animated 3D models of common physical media (vinyl record, CD, etc.).
+@MainActor
 public struct PhysicalMedia {
     /// Creates a view displaying an animated 3D model of a vinyl record partially pulled from its sleeve.
     /// - Parameters:

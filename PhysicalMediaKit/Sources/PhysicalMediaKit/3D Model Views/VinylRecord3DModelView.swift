@@ -22,6 +22,7 @@ struct VinylRecord3DModelView: View {
     @State private var dragGestureActive = false
     @State private var rotationX: Float = 0
     @State private var rotationY: Float = 0
+    @State private var animationTimer: Timer? = nil
     
     // Customizable params
     @State private var albumArtURL: URL
@@ -44,7 +45,7 @@ struct VinylRecord3DModelView: View {
     var body: some View {
         RealityView { content in
             do {
-                let entity = try await Entity(named: entityName)
+                let entity = try await Entity(named: entityName, in: .module)
                 entity.name = entityName
                 entity.setScale(.init(x: modelScaleFactor, y: modelScaleFactor, z: modelScaleFactor), relativeTo: entity)
                 entity.generateCollisionShapes(recursive: true)
@@ -93,20 +94,26 @@ struct VinylRecord3DModelView: View {
         let initialX = rotationX
         let initialY = rotationY
         
-        Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { timer in
+        let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { timer in
             currentStep += 1
             let t = Float(currentStep) / Float(steps)
             let easeOut = 1 - pow(1 - t, 3) // cubic easing
 
-            rotationX = initialX * (1 - easeOut)
-            rotationY = initialY * (1 - easeOut)
-
-            if currentStep >= steps {
-                rotationX = 0
-                rotationY = 0
-                timer.invalidate()
+            Task { @MainActor in
+                rotationX = initialX * (1 - easeOut)
+                rotationY = initialY * (1 - easeOut)
+                
+                if currentStep >= steps {
+                    rotationX = 0
+                    rotationY = 0
+                    animationTimer?.invalidate()
+                    animationTimer = nil
+                }
             }
         }
+        
+        RunLoop.main.add(timer, forMode: .common)
+        self.animationTimer = timer
     }
     
     private func updateSleeveMaterial(for parent: Entity) async {
@@ -171,35 +178,43 @@ struct VinylRecord3DModelView: View {
         rotationX = 0
         rotationY = 0
         
-        Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { timer in
-            if dragGestureActive { timer.invalidate() }
-            
-            let phaseOneProgress = Float(phaseOneStep) / (Float(steps)/4.0)
-            let phaseTwoProgress = Float(phaseTwoStep) / (Float(steps)/4.0)
-            let phaseThreeProgress = Float(phaseThreeStep) / (Float(steps)/4.0)
-            let phaseFourProgress = Float(phaseFourStep) / (Float(steps)/4.0)
-            
-            if phaseOneProgress < 1 {
-                phaseOneStep += 1
-                rotationY = 0.25 * phaseOneProgress
-            } else if phaseTwoProgress < 1 {
-                phaseTwoStep += 1
-                rotationY = (-0.25 * phaseTwoProgress) + 0.25
-            } else if phaseThreeProgress < 1 {
-                phaseThreeStep += 1
-                rotationY = -0.25 * phaseThreeProgress
-            } else {
-                phaseFourStep += 1
-                rotationY = (0.25 * phaseFourProgress) - 0.25
-            }
-            
-            if phaseFourProgress >= 1 {
-                phaseOneStep = 0
-                phaseTwoStep = 0
-                phaseThreeStep = 0
-                phaseFourStep = 0
+        let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { timer in
+            Task { @MainActor in
+                if dragGestureActive {
+                    animationTimer?.invalidate()
+                    animationTimer = nil
+                }
+                
+                let phaseOneProgress = Float(phaseOneStep) / (Float(steps)/4.0)
+                let phaseTwoProgress = Float(phaseTwoStep) / (Float(steps)/4.0)
+                let phaseThreeProgress = Float(phaseThreeStep) / (Float(steps)/4.0)
+                let phaseFourProgress = Float(phaseFourStep) / (Float(steps)/4.0)
+                
+                if phaseOneProgress < 1 {
+                    phaseOneStep += 1
+                    rotationY = 0.25 * phaseOneProgress
+                } else if phaseTwoProgress < 1 {
+                    phaseTwoStep += 1
+                    rotationY = (-0.25 * phaseTwoProgress) + 0.25
+                } else if phaseThreeProgress < 1 {
+                    phaseThreeStep += 1
+                    rotationY = -0.25 * phaseThreeProgress
+                } else {
+                    phaseFourStep += 1
+                    rotationY = (0.25 * phaseFourProgress) - 0.25
+                }
+                
+                if phaseFourProgress >= 1 {
+                    phaseOneStep = 0
+                    phaseTwoStep = 0
+                    phaseThreeStep = 0
+                    phaseFourStep = 0
+                }
             }
         }
+        
+        RunLoop.main.add(timer, forMode: .common)
+        self.animationTimer = timer
     }
 }
 
