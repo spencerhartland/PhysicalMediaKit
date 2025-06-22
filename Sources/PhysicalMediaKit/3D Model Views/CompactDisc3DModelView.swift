@@ -20,6 +20,8 @@ struct CompactDisc3DModelView: View {
     @State private var rotationX: Float = 0
     @State private var rotationY: Float = 0
     @State private var animationTimer: Timer? = nil
+    @State private var viewID = UUID()
+    @State private var debounceWorkItem: DispatchWorkItem? = nil
     
     var albumArtURL: URL
     var modelScaleFactor: Float
@@ -45,6 +47,7 @@ struct CompactDisc3DModelView: View {
                 entity.transform.rotation = rotX * rotY
             }
         }
+        .id(viewID)
         .gesture(
             DragGesture()
                 .onChanged { value in
@@ -65,6 +68,23 @@ struct CompactDisc3DModelView: View {
                 attractLoop()
             }
         }
+        .onChange(of: albumArtURL) { _, _ in
+            triggerViewUpdate()
+        }
+        .onChange(of: modelScaleFactor) { _, _ in
+            triggerViewUpdate()
+        }
+    }
+    
+    private func triggerViewUpdate() {
+        debounceWorkItem?.cancel()
+        
+        let workItem = DispatchWorkItem {
+            viewID = UUID()
+        }
+        debounceWorkItem = workItem
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: workItem)
     }
     
     // Smoothly transitions the model's rotation to home / zero from current rotation

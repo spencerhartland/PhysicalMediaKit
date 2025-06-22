@@ -82,16 +82,26 @@ struct VinylRecord3DModelView: View {
                 attractLoop()
             }
         }
-        .onChange(of: vinylColor) { _, _ in
-            debounceWorkItem?.cancel()
-            
-            let workItem = DispatchWorkItem {
-                viewID = UUID()
-            }
-            debounceWorkItem = workItem
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: workItem)
+        .onChange(of: albumArtURL) { _, _ in
+            triggerViewUpdate()
         }
+        .onChange(of: vinylColor) { _, _ in
+            triggerViewUpdate()
+        }
+        .onChange(of: modelScaleFactor) { _, _ in
+            triggerViewUpdate()
+        }
+    }
+    
+    private func triggerViewUpdate() {
+        debounceWorkItem?.cancel()
+        
+        let workItem = DispatchWorkItem {
+            viewID = UUID()
+        }
+        debounceWorkItem = workItem
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: workItem)
     }
     
     // Smoothly transitions the model's rotation to home / zero from current rotation
