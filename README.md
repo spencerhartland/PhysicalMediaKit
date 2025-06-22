@@ -14,10 +14,10 @@ See the framework's capabilities and learn how to integrate it into your SwiftUI
 `PhysicalMedia` provides methods to render the available 3D models of common physical media. See [`PhysicalMedia.swift`](PhysicalMediaKit/PhysicalMedia.swift) for documentation specific to each method.
 
 ### Displaying a vinyl record
-`PhysicalMedia.vinylRecord(_:_:_:_:)`
+`PhysicalMedia.vinylRecord(_:_:_:)`
 
 ### Displaying a compact disc
 `PhysicalMedia.compactDisc(_:_:)`
 
 ### Displaying a compact cassette
-`PhysicalMedia.compactCassette(_:_:_:_:)`
+`PhysicalMedia.compactCassette(_:_:_:)`
