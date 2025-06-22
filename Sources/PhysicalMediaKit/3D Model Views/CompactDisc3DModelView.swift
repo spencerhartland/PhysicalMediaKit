@@ -21,8 +21,8 @@ struct CompactDisc3DModelView: View {
     @State private var rotationY: Float = 0
     @State private var animationTimer: Timer? = nil
     
-    @State private var albumArtURL: URL
-    @State private var modelScaleFactor: Float
+    var albumArtURL: URL
+    var modelScaleFactor: Float
     
     public init(_ albumArtURL: URL,_ scale: Float) {
         self.albumArtURL = albumArtURL

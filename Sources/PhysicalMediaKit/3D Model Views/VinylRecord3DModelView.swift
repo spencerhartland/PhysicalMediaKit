@@ -18,27 +18,26 @@ struct VinylRecord3DModelView: View {
     private let defaultModelScaleFactor: Float = 10.0
     private let attractLoopDelay: Double = 4
     
-    // Attract loop drag gesture reset state
+    // Attract loop drag gesture reset stat
     @State private var dragGestureActive = false
     @State private var rotationX: Float = 0
     @State private var rotationY: Float = 0
     @State private var animationTimer: Timer? = nil
+    @State private var viewID = UUID()
+    @State private var debounceWorkItem: DispatchWorkItem? = nil
     
     // Customizable params
-    @State private var albumArtURL: URL
-    @State private var vinylColor: Color
-    @State private var vinylOpacity: Float
-    @State private var modelScaleFactor: Float
+    var albumArtURL: URL
+    var vinylColor: Color
+    var modelScaleFactor: Float
     
     public init(
         _ albumArtURL: URL,
         _ vinylColor: Color,
-        _ vinylOpacity: Float,
         _ scale: Float = 1.0
     ) {
         self.albumArtURL = albumArtURL
         self.vinylColor = vinylColor
-        self.vinylOpacity = vinylOpacity
         self.modelScaleFactor = scale * defaultModelScaleFactor
     }
     
@@ -62,6 +61,7 @@ struct VinylRecord3DModelView: View {
                 entity.transform.rotation = rotX * rotY
             }
         }
+        .id(viewID)
         .gesture(
             DragGesture()
                 .onChanged { value in
@@ -81,6 +81,16 @@ struct VinylRecord3DModelView: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + attractLoopDelay) {
                 attractLoop()
             }
+        }
+        .onChange(of: vinylColor) { _, _ in
+            debounceWorkItem?.cancel()
+            
+            let workItem = DispatchWorkItem {
+                viewID = UUID()
+            }
+            debounceWorkItem = workItem
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: workItem)
         }
     }
     
@@ -156,7 +166,7 @@ struct VinylRecord3DModelView: View {
                     }
                     
                     try plastic.setParameter(name: vinylColorParameterName, value: .color(UIColor(vinylColor)))
-                    try plastic.setParameter(name: vinylOpacityParameterName, value: .float(vinylOpacity))
+                    try plastic.setParameter(name: vinylOpacityParameterName, value: .float(vinylColor.resolve(in: .init()).opacity))
                     
                     return plastic
                 }

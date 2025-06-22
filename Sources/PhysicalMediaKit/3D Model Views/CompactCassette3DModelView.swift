@@ -33,21 +33,20 @@ struct CompactCassette3DModelView: View {
     @State private var rotationX: Float = 0
     @State private var rotationY: Float = 0
     @State private var animationTimer: Timer? = nil
+    @State private var viewID = UUID()
+    @State private var debounceWorkItem: DispatchWorkItem? = nil
     
-    @State private var albumArtURL: URL
-    @State private var cassetteColor: Color
-    @State private var cassetteOpacity: Float
-    @State private var modelScaleFactor: Float
+    var albumArtURL: URL
+    var cassetteColor: Color
+    var modelScaleFactor: Float
     
     public init(
         _ albumArtURL: URL,
         _ cassetteColor: Color,
-        _ cassetteOpacity: Float,
         _ scale: Float = 1.0
     ) {
         self.albumArtURL = albumArtURL
         self.cassetteColor = cassetteColor
-        self.cassetteOpacity = cassetteOpacity
         self.modelScaleFactor = scale * defaultModelScaleFactor
     }
     
@@ -68,6 +67,7 @@ struct CompactCassette3DModelView: View {
                 entity.transform.rotation = rotX * rotY
             }
         }
+        .id(viewID)
         .gesture(
             DragGesture()
                 .onChanged { value in
@@ -87,6 +87,16 @@ struct CompactCassette3DModelView: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + attractLoopDelay) {
                 attractLoop()
             }
+        }
+        .onChange(of: cassetteColor) { _, _ in
+            debounceWorkItem?.cancel()
+            
+            let workItem = DispatchWorkItem {
+                viewID = UUID()
+            }
+            debounceWorkItem = workItem
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: workItem)
         }
     }
     
@@ -171,7 +181,7 @@ struct CompactCassette3DModelView: View {
                         )
                         try plastic.setParameter(
                             name: cassetteOpacityParameterName,
-                            value: .float(cassetteOpacity)
+                            value: .float(cassetteColor.resolve(in: .init()).opacity)
                         )
                         
                         return plastic
