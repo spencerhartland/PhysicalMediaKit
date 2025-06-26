@@ -27,14 +27,9 @@ struct CompactCassette3DModelView: View {
     private let cassetteColorParameterName = "cassetteColor"
     private let cassetteOpacityParameterName = "cassetteOpacity"
     private let defaultModelScaleFactor: Float = 20.0
-    private let attractLoopDelay: Double = 4
     
-    @State private var dragGestureActive = false
-    @State private var rotationX: Float = 0
-    @State private var rotationY: Float = 0
-    @State private var animationTimer: Timer? = nil
-    @State private var viewID = UUID()
-    @State private var debounceWorkItem: DispatchWorkItem? = nil
+    @State private var modelShouldRefresh: Bool = false
+    @State private var refreshWorkItem: DispatchWorkItem? = nil
     
     var albumArtURL: URL
     var cassetteColor: Color
@@ -51,7 +46,7 @@ struct CompactCassette3DModelView: View {
     }
     
     var body: some View {
-        RealityView { content in
+        PhysicalMedia3DModelView(entity: entityName, refresh: $modelShouldRefresh) { content in
             if let entity = try? await Entity(named: entityName, in: .module) {
                 entity.name = entityName
                 entity.setScale(.init(x: modelScaleFactor, y: modelScaleFactor, z: modelScaleFactor), relativeTo: entity)
@@ -60,102 +55,36 @@ struct CompactCassette3DModelView: View {
                 updateCassetteMaterial(for: entity)
                 content.add(entity)
             }
-        } update: { content in
-            if let entity = content.entities.first(where: { $0.name == entityName }) {
-                let rotX = simd_quatf(angle: rotationX, axis: SIMD3<Float>(1, 0, 0))
-                let rotY = simd_quatf(angle: rotationY, axis: SIMD3<Float>(0, 1, 0))
-                entity.transform.rotation = rotX * rotY
-            }
-        }
-        .id(viewID)
-        .gesture(
-            DragGesture()
-                .onChanged { value in
-                    dragGestureActive = true
-                    rotationX = Float(value.translation.height / 200)
-                    rotationY = Float(value.translation.width / 200)
-                }
-                .onEnded { _ in
-                    dragGestureActive = false
-                    resetRotation()
-                    DispatchQueue.main.asyncAfter(deadline: .now() + attractLoopDelay) {
-                        attractLoop()
-                    }
-                }
-        )
-        .onAppear {
-            DispatchQueue.main.asyncAfter(deadline: .now() + attractLoopDelay) {
-                attractLoop()
-            }
         }
         .onChange(of: albumArtURL) { _, _ in
-            triggerViewUpdate()
+            requestModelRefresh()
         }
         .onChange(of: cassetteColor) { _, _ in
-            triggerViewUpdate()
+            requestModelRefresh()
         }
         .onChange(of: modelScaleFactor) { _, _ in
-            triggerViewUpdate()
+            requestModelRefresh()
         }
     }
     
-    private func triggerViewUpdate() {
-        debounceWorkItem?.cancel()
+    private func requestModelRefresh() {
+        refreshWorkItem?.cancel()
         
         let workItem = DispatchWorkItem {
-            viewID = UUID()
-        }
-        debounceWorkItem = workItem
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: workItem)
-    }
-    
-    // Smoothly transitions the model's rotation to home / zero from current rotation
-    private func resetRotation() {
-        let duration: TimeInterval = 1
-        let steps = 60
-        let interval = duration / Double(steps)
-        
-        var currentStep = 0
-        let initialX = rotationX
-        let initialY = rotationY
-        
-        let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { timer in
-            currentStep += 1
-            let t = Float(currentStep) / Float(steps)
-            let easeOut = 1 - pow(1 - t, 3) // cubic easing
-            
-            Task { @MainActor in
-                rotationX = initialX * (1 - easeOut)
-                rotationY = initialY * (1 - easeOut)
-                
-                if currentStep >= steps {
-                    rotationX = 0
-                    rotationY = 0
-                    animationTimer?.invalidate()
-                    animationTimer = nil
-                }
+            modelShouldRefresh = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                modelShouldRefresh = false
             }
         }
+        refreshWorkItem = workItem
         
-        RunLoop.main.add(timer, forMode: .common)
-        self.animationTimer = timer
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: workItem)
     }
     
     private func updateCoverMaterial(for parent: Entity) async {
         if let cover = parent.findEntity(named: "Cover") {
             do {
-                // Download album art
-                guard let (data, _) = try? await URLSession.shared.data(from: albumArtURL),
-                      let uiImage = UIImage(data: data),
-                      let cgImage = uiImage.cgImage else {
-                    throw PhysicalMediaError.failedToLoadAlbumArt
-                }
-                
-                // Generate texture from image
-                guard let texture = try? await TextureResource(image: cgImage, options: .init(semantic: .color)) else {
-                    throw PhysicalMediaError.failedToGenerateTextureFromImage
-                }
+                let texture = try await Network.fetchAlbumArt(from: albumArtURL)
                 
                 // Apply texture to cassette cover
                 try cover.modifyMaterials { material in
@@ -171,7 +100,7 @@ struct CompactCassette3DModelView: View {
                     return paper
                 }
             } catch {
-                print("Some error occurred")
+                print("CompactCassette3DModelView.updateCoverMaterial - \(error.localizedDescription)")
             }
         }
     }
@@ -197,60 +126,9 @@ struct CompactCassette3DModelView: View {
                         return plastic
                     }
                 } catch {
-                    print("Some error occurred")
+                    print("CompactCassette3DModelView.updateCassetteMaterial - \(error.localizedDescription)")
                 }
             }
         }
-    }
-    
-    private func attractLoop() {
-        let duration: TimeInterval = 12
-        let steps = 576
-        let interval = duration / Double(steps)
-        
-        var phaseOneStep = 0
-        var phaseTwoStep = 0
-        var phaseThreeStep = 0
-        var phaseFourStep = 0
-        rotationX = 0
-        rotationY = 0
-        
-        let timer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { timer in
-            Task { @MainActor in
-                if dragGestureActive {
-                    self.animationTimer?.invalidate()
-                    self.animationTimer = nil
-                }
-                
-                let phaseOneProgress = Float(phaseOneStep) / (Float(steps)/4.0)
-                let phaseTwoProgress = Float(phaseTwoStep) / (Float(steps)/4.0)
-                let phaseThreeProgress = Float(phaseThreeStep) / (Float(steps)/4.0)
-                let phaseFourProgress = Float(phaseFourStep) / (Float(steps)/4.0)
-                
-                if phaseOneProgress < 1 {
-                    phaseOneStep += 1
-                    rotationY = 0.25 * phaseOneProgress
-                } else if phaseTwoProgress < 1 {
-                    phaseTwoStep += 1
-                    rotationY = (-0.25 * phaseTwoProgress) + 0.25
-                } else if phaseThreeProgress < 1 {
-                    phaseThreeStep += 1
-                    rotationY = -0.25 * phaseThreeProgress
-                } else {
-                    phaseFourStep += 1
-                    rotationY = (0.25 * phaseFourProgress) - 0.25
-                }
-                
-                if phaseFourProgress >= 1 {
-                    phaseOneStep = 0
-                    phaseTwoStep = 0
-                    phaseThreeStep = 0
-                    phaseFourStep = 0
-                }
-            }
-        }
-        
-        RunLoop.main.add(timer, forMode: .common)
-        self.animationTimer = timer
     }
 }
