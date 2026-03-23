@@ -10,37 +10,46 @@ import RealityKit
 import CoreGraphics
 
 actor ArtworkCache {
-    static let shared = ArtworkCache()
-
-    // NSCache is thread-safe and supports eviction.
     private let cache = NSCache<NSURL, CGImage>()
     private var inFlight: Set<URL> = []
-
-    init() {
-        cache.totalCostLimit = 60 * 1024 * 1024
-        cache.countLimit = 18
+    
+    static internal let shared = ArtworkCache()
+    
+    internal func loadTexture(for url: URL) async -> TextureResource? {
+        // Fetch the texture from the remote URL
+        do {
+            try await load(url: url)
+        } catch {
+            return nil
+        }
+        
+        // Retrieve the texture from cache
+        if let texture = await texture(for: url) {
+            return texture
+        } else {
+            // If fetching the texture failed, clean cache
+            cache.removeObject(forKey: url as NSURL)
+            return nil
+        }
     }
     
-    public func loadTexture(for url: URL) async -> TextureResource? {
-        await load(url: url)
-        return await texture(for: url)
-    }
+    internal func removeAllArtworks() { cache.removeAllObjects() }
     
     private func texture(for url: URL) async -> TextureResource? {
         guard let image = cache.object(forKey: url as NSURL) else { return nil }
         return try? await TextureResource(image: image, options: .init(semantic: .color))
     }
 
-    private func load(url: URL) async {
+    private func load(url: URL) async throws {
         if cache.object(forKey: url as NSURL) != nil || inFlight.contains(url) { return }
         inFlight.insert(url)
         defer { inFlight.remove(url) }
 
         do {
             let image = try await Network.fetchAlbumArt(from: url)
-            
-            let cost = image.width * image.height * 4
-            cache.setObject(image, forKey: url as NSURL, cost: cost)
+            cache.setObject(image, forKey: url as NSURL)
+        } catch is CancellationError {
+            throw CancellationError()
         } catch {
             print("Album art load failed: \(error)")
         }

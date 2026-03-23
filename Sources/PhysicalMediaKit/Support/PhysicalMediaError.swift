@@ -9,4 +9,5 @@ enum PhysicalMediaError: Error {
     case failedToLoadMaterial
     case failedToLoadAlbumArt
     case failedToGenerateTextureFromImage
+    case failedToGetDataFromImage
 }

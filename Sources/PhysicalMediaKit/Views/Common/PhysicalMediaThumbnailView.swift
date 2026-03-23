@@ -11,8 +11,6 @@ import RealityKit
 internal struct PhysicalMediaThumbnailView: View {
     @State private var thumbnail: UIImage?
     
-    private let renderer = ThumbnailRenderer()
-    
     private var makeEntity: () async -> Entity?
     private var thumbnailCacheKey: String
     private var rotationXY: (Float, Float)?
@@ -39,11 +37,12 @@ internal struct PhysicalMediaThumbnailView: View {
             }
         }
         .task {
-            if let thumbnail = await renderer.thumbnail(with: thumbnailCacheKey) {
+            if let thumbnail = await ThumbnailRenderer.shared.thumbnail(with: thumbnailCacheKey) {
                 self.thumbnail = thumbnail
             } else {
                 guard let entity = await makeEntity() else { return }
-                self.thumbnail = await renderer.thumbnail(
+                guard !Task.isCancelled else { return }
+                self.thumbnail = await ThumbnailRenderer.shared.thumbnail(
                     for: entity,
                     with: thumbnailCacheKey,
                     and: rotationXY

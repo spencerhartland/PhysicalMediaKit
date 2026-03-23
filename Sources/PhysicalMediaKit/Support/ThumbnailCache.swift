@@ -13,14 +13,6 @@ import CryptoKit
 internal actor ThumbnailCache {
     /// The width / height of the thumbnail in pixels.
     internal static let thumbnailSize = 1024
-    /// The number of bytes per pixel in a UIImage.
-    private static let bytesPerPixel = 4
-    /// The maximum number of thumbnails allowed in the cache.
-    private static let maxCount = 50
-    /// The cost associated with a single thumbnail in the cache.
-    private static let costPerThumbnail = thumbnailSize * thumbnailSize * bytesPerPixel
-    /// The maximum cost associated with the thumbnails in the cache.
-    private static let maxCost = maxCount * costPerThumbnail
     /// The maximum number of thumbnails allowed on disk.
     private static let maxDiskCount = 64
     /// The name of the disk cache subdirectory.
@@ -37,9 +29,6 @@ internal actor ThumbnailCache {
     ///
     /// - Returns: The new `ThumbnailCache`.
     private init() {
-        cache.totalCostLimit = ThumbnailCache.maxCost
-        cache.countLimit = ThumbnailCache.maxCount
-        
         // Set up disk cache directory inside Caches/
         if let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first {
             let directoryURL = cachesURL.appendingPathComponent(
@@ -65,7 +54,7 @@ internal actor ThumbnailCache {
     ///     - key: The identifying string to associate with the thumbnail in the cache.
     func cache(_ thumbnail: UIImage, for key: String) {
         // Write to in-memory cache
-        cache.setObject(thumbnail, forKey: key as NSString, cost: ThumbnailCache.costPerThumbnail)
+        cache.setObject(thumbnail, forKey: key as NSString)
         // Write to disk cache
         writeToDisk(thumbnail, for: key)
     }
@@ -87,7 +76,7 @@ internal actor ThumbnailCache {
         // 2. Check disk cache
         if let image = readFromDisk(for: key) {
             // Promote to in-memory cache
-            cache.setObject(image, forKey: key as NSString, cost: ThumbnailCache.costPerThumbnail)
+            cache.setObject(image, forKey: key as NSString)
             return image
         }
         
@@ -104,7 +93,7 @@ internal actor ThumbnailCache {
     }
     
     /// Removes all thumbnail images from both caches.
-    func clearCache() {
+    func removeAllThumbnails() {
         cache.removeAllObjects()
         clearDiskCache()
     }
@@ -137,11 +126,12 @@ internal actor ThumbnailCache {
     ///     - image: The thumbnail to write.
     ///     - key: The cache key.
     private func writeToDisk(_ image: UIImage, for key: String) {
-        guard let url = diskFileURL(for: key),
-              let data = image.pngData()
-        else { return }
+        guard let url = diskFileURL(for: key) else { return }
         
         do {
+            guard let data = image.pngData() else {
+                throw PhysicalMediaError.failedToGetDataFromImage
+            }
             try data.write(to: url, options: .atomic)
             evictDiskCacheIfNeeded()
         } catch {

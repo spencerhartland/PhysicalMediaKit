@@ -21,9 +21,9 @@ internal final class Network {
     ///     - url: The URL at which the album artwork is located.
     /// - Returns: The album artwork.
     static func fetchAlbumArt(from url: URL) async throws -> CGImage {
-        guard let (data, _) = try? await URLSession.shared.data(from: url),
-              let image = image(from: data)
-        else {
+        let (data, _) = try await URLSession.shared.data(from: url)
+        
+        guard let image = image(from: data) else {
             throw PhysicalMediaError.failedToLoadAlbumArt
         }
         

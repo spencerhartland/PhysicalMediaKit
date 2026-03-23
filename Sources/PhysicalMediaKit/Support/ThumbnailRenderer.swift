@@ -22,6 +22,11 @@ import Metal
     /// The keys of any currently rendering thumbnails.
     private var inFlight: Set<String> = []
     
+    private var queue: [CheckedContinuation<Void, Never>] = []
+    private var isRendering: Bool = false
+    
+    static internal let shared = ThumbnailRenderer()
+    
     /// Creates a new `ThumbnailRenderer`.
     ///
     /// - Returns: The new `VinylRecordModel`.
@@ -137,6 +142,9 @@ import Metal
     ///       the X and Y axes.
     /// - Returns: The image of the entity, if it was able to be created. Otherwise, nil.
     private func render(_ entity: Entity, with rotationXY: (Float, Float)?) async -> UIImage? {
+        await lock()
+        defer { unlock() }
+        
         guard let renderer, let device, let commandQueue else { return nil }
         
         let rotX = simd_quatf(angle: rotationXY?.0 ?? 0, axis: SIMD3<Float>(1, 0, 0))
@@ -232,5 +240,23 @@ import Metal
         }
         
         return UIImage(cgImage: cgImage)
+    }
+    
+    private func lock() async {
+        if isRendering {
+            await withCheckedContinuation { continuation in
+                queue.append(continuation)
+            }
+        }
+        isRendering = true
+    }
+
+    private func unlock() {
+        if let next = queue.first {
+            queue.removeFirst()
+            next.resume()  // Next render takes over the lock
+        } else {
+            isRendering = false
+        }
     }
 }
