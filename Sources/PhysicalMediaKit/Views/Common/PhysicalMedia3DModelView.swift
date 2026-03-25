@@ -54,6 +54,7 @@ internal struct PhysicalMedia3DModelView: View {
     var body: some View {
         RealityView { content in
             await makeContent(content)
+            await configureLighting(for: content)
         } update: { content in
             if let entity = content.entities.first(where: { $0.name == entityName }) {
                 updateContent(entity)
@@ -92,6 +93,43 @@ internal struct PhysicalMedia3DModelView: View {
             if attractLoopTimer != nil && !dragGestureActive && shouldAnimate {
                 attractLoop()
             }
+        }
+    }
+    
+    // MARK: Lighting -
+    private func makeEnvironment() async -> EnvironmentResource? {
+        guard let url = Bundle.module.url(forResource: "studio", withExtension: "exr"),
+              let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil),
+              let cgImage = CGImageSourceCreateImageAtIndex(imageSource, 0, nil) else {
+            return nil
+        }
+        return try? await EnvironmentResource(equirectangular: cgImage)
+    }
+    
+    private func configureLighting(for content: RealityViewCameraContent) async -> Void {
+        if let environment = await makeEnvironment() {
+            
+            // Image-based Lighting
+            
+            let iblEntity = Entity()
+            iblEntity.components.set(ImageBasedLightComponent(
+                source: .single(environment),
+                intensityExponent: 1
+            ))
+            content.add(iblEntity)
+
+            for entity in content.entities {
+                entity.components.set(ImageBasedLightReceiverComponent(imageBasedLight: iblEntity))
+            }
+
+            // Virtual Lighting
+            
+            let fillLight = Entity()
+            var fill = DirectionalLightComponent()
+            fill.intensity = 500
+            fillLight.components.set(fill)
+            fillLight.look(at: [0, 0, 0], from: [-60, 10, 12], relativeTo: nil)
+            content.add(fillLight)
         }
     }
     
