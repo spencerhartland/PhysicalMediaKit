@@ -11,16 +11,18 @@ internal struct PlaceholderView: View {
     private let placeholderSymbolName = "music.note"
     
     var body: some View {
-        Rectangle()
-            .aspectRatio(1, contentMode: .fit)
-            .foregroundStyle(.clear)
-            .overlay {
-                Image(systemName: placeholderSymbolName)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .padding()
-                    .foregroundStyle(.secondary)
-                    .symbolEffect(.pulse)
-            }
+        GeometryReader { geometry in
+            Rectangle()
+                .foregroundStyle(.clear)
+                .overlay {
+                    Image(systemName: placeholderSymbolName)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding(geometry.size.width / 6)
+                        .foregroundStyle(.secondary)
+                        .symbolEffect(.pulse)
+                }
+        }
+        .aspectRatio(1, contentMode: .fit)
     }
 }
