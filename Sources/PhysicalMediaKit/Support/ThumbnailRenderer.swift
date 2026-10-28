@@ -20,7 +20,9 @@ import Metal
     /// The renderer's camera.
     private let camera = PerspectiveCamera()
     /// The keys of any currently rendering thumbnails.
-    private var inFlight: Set<String> = []
+    private var inFlight: [String:Task<UIImage?, Never>] = [:]
+    /// Lighting task.
+    private var lightingTask: Task<Void, Never>?
     
     private var queue: [CheckedContinuation<Void, Never>] = []
     private var isRendering: Bool = false
@@ -30,7 +32,7 @@ import Metal
     /// Creates a new `ThumbnailRenderer`.
     ///
     /// - Returns: The new `VinylRecordModel`.
-    init() {
+    private init() {
         guard let device = MTLCreateSystemDefaultDevice(),
               let commandQueue = device.makeCommandQueue()
         else {
@@ -46,8 +48,6 @@ import Metal
         do {
             let renderer = try RealityRenderer()
             
-            Task { await configureLighting(for: renderer) }
-            
             // Set background color (transparent or solid)
             renderer.cameraSettings.colorBackground = .color(
                 .init(srgbRed: 0, green: 0, blue: 0, alpha: 0)
@@ -62,17 +62,19 @@ import Metal
             renderer.activeCamera = camera
             
             self.renderer = renderer
+            if let renderer = self.renderer {
+                self.lightingTask = Task { [weak self] in
+                    await self?.configureLighting(for: renderer)
+                }
+            }
         } catch {
             Log.general.error("Failed to create RealityRenderer: \(error)")
             self.renderer = nil
         }
     }
     
-    func thumbnail(with key: String) async -> UIImage? {
-        return await ThumbnailCache.shared.retrieveThumbnail(with: key)
-    }
-    
-    /// Renders a thumbnail of the specified RealityKit entity.
+    /// Renders a thumbnail image of the specified entity with the specified rotation applied to
+    /// the X and Y axes.
     ///
     /// - Parameters:
     ///     - entity: The subject of the thumbnail.
@@ -85,14 +87,17 @@ import Metal
         with key: String,
         and rotationXY: (Float, Float)?
     ) async -> UIImage? {
-        guard !inFlight.contains(key) else { return nil }
-        inFlight.insert(key)
-        defer { inFlight.remove(key) }
+        if let existing = inFlight[key] { return await existing.value }
         
-        let image = await render(entity, with: rotationXY)
-        if let image { await ThumbnailCache.shared.cache(image, for: key) }
+        let task = Task<UIImage?, Never> {
+            await render(entity, with: rotationXY)
+        }
         
-        return image
+        inFlight[key] = task
+        let thumbnail = await task.value
+        inFlight[key] = nil
+        if let thumbnail { await ThumbnailCache.shared.cache(thumbnail, for: key) }
+        return thumbnail
     }
     
     /// Configures lighting for the `RealityKit` scene.
@@ -111,7 +116,6 @@ import Metal
         }
         // Create lighting resource from image
         if let envResource = try? await EnvironmentResource(equirectangular: cgImage) {
-            guard renderer.lighting.resource == nil else { return }
             renderer.lighting.resource = envResource
             renderer.lighting.intensityExponent = 1
         } else {
@@ -142,6 +146,8 @@ import Metal
     ///       the X and Y axes.
     /// - Returns: The image of the entity, if it was able to be created. Otherwise, nil.
     private func render(_ entity: Entity, with rotationXY: (Float, Float)?) async -> UIImage? {
+        await lightingTask?.value
+        
         await lock()
         defer { unlock() }
         

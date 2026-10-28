@@ -37,7 +37,9 @@ internal struct PhysicalMediaThumbnailView: View {
             }
         }
         .task {
-            if let thumbnail = await ThumbnailRenderer.shared.thumbnail(with: thumbnailCacheKey) {
+            if let thumbnail = await ThumbnailCache.shared.retrieveThumbnail(
+                with: thumbnailCacheKey
+            ) {
                 self.thumbnail = thumbnail
             } else {
                 guard let entity = await makeEntity() else { return }

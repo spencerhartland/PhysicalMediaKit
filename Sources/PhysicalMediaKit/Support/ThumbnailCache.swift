@@ -7,7 +7,7 @@
 
 import UIKit
 import RealityKit
-import CryptoKit
+import os
 
 /// A cache to store thumbnails.
 internal actor ThumbnailCache {
@@ -16,35 +16,60 @@ internal actor ThumbnailCache {
     /// The maximum number of thumbnails allowed on disk.
     private static let maxDiskCount = 64
     /// The name of the disk cache subdirectory.
-    private static let diskCacheDirectoryName = "Thumbnails"
+    private static let diskCacheDirectoryName = "com.spencerhartland.PhysicalMediaKit.thumbnails"
     
     /// A global cache for thumbnails.
     internal static let shared = ThumbnailCache()
     /// An internal cache for thumbnails.
     private let cache = NSCache<NSString, UIImage>()
-    /// The URL of the on-disk cache directory.
-    private let diskCacheURL: URL?
+    
+    private static let configuredDiskCacheURL = OSAllocatedUnfairLock<URL?>(initialState: nil)
+    private static var diskCacheURL: URL? {
+        ThumbnailCache.configuredDiskCacheURL.withLock { $0 }
+    }
 
     /// Creates a new `ThumbnailCache`.
     ///
     /// - Returns: The new `ThumbnailCache`.
     private init() {
-        // Set up disk cache directory inside Caches/
-        if let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first {
-            let directoryURL = cachesURL.appendingPathComponent(
-                ThumbnailCache.diskCacheDirectoryName,
-                isDirectory: true
-            )
-            do {
-                try FileManager.default.createDirectory(at: directoryURL, withIntermediateDirectories: true)
-                self.diskCacheURL = directoryURL
-            } catch {
-                Log.general.error("Failed to create disk cache directory: \(error)")
-                self.diskCacheURL = nil
-            }
+        guard ThumbnailCache.diskCacheURL == nil else { return }
+        
+        if let cachesDirectory = FileManager.default.urls(
+            for: .cachesDirectory,
+            in: .userDomainMask
+        ).first {
+            ThumbnailCache.configure(with: cachesDirectory)
         } else {
-            self.diskCacheURL = nil
+            Log.general.error("Failed to unwrap url for caches directory.")
         }
+    }
+    
+    internal static func configure(with baseURL: URL) {
+        let cacheURL = baseURL.appendingPathComponent(
+            ThumbnailCache.diskCacheDirectoryName,
+            isDirectory: true
+        )
+        do {
+            try FileManager.default.createDirectory(
+                at: cacheURL,
+                withIntermediateDirectories: true
+            )
+            
+            configuredDiskCacheURL.withLock { $0 = cacheURL }
+        } catch {
+            Log.general.error("Failed to create cache directory on disk: \(error)")
+        }
+    }
+    
+    internal static func thumbnailFromDisk(for key: String) -> UIImage? {
+        guard let thumbnailURL = ThumbnailCache.diskFileURL(for: key),
+              FileManager.default.fileExists(atPath: thumbnailURL.path()),
+              let thumbnailData = try? Data(contentsOf: thumbnailURL)
+        else {
+            return nil
+        }
+        
+        return UIImage(data: thumbnailData)
     }
     
     /// Adds the thumbnail to both the in-memory and disk caches with the specified key.
@@ -52,7 +77,7 @@ internal actor ThumbnailCache {
     /// - Parameters:
     ///     - thumbnail: The thumbnail to cache.
     ///     - key: The identifying string to associate with the thumbnail in the cache.
-    func cache(_ thumbnail: UIImage, for key: String) {
+    internal func cache(_ thumbnail: UIImage, for key: String) {
         // Write to in-memory cache
         cache.setObject(thumbnail, forKey: key as NSString)
         // Write to disk cache
@@ -67,7 +92,7 @@ internal actor ThumbnailCache {
     /// - Parameters:
     ///     - key: The key associated with the thumbnail to retrieve.
     /// - Returns: The thumbnail, if it exists. Otherwise, nil.
-    func retrieveThumbnail(with key: String) -> UIImage? {
+    internal func retrieveThumbnail(with key: String) -> UIImage? {
         // 1. Check in-memory cache
         if let image = cache.object(forKey: key as NSString) {
             return image
@@ -87,37 +112,27 @@ internal actor ThumbnailCache {
     ///
     /// - Parameters:
     ///     - key: The key associated with the thumbnail to remove.
-    func removeThumbnail(with key: String) {
+    internal func removeThumbnail(with key: String) {
         cache.removeObject(forKey: key as NSString)
         removeFromDisk(for: key)
     }
     
     /// Removes all thumbnail images from both caches.
-    func removeAllThumbnails() {
+    internal func removeAllThumbnails() {
         cache.removeAllObjects()
         clearDiskCache()
     }
     
     // MARK: - Disk Operations
     
-    /// Returns a filesystem-safe filename for the given cache key by hashing it with SHA256.
-    ///
-    /// - Parameters:
-    ///     - key: The cache key.
-    /// - Returns: The hashed filename with a `.png` extension.
-    private func diskFileName(for key: String) -> String {
-        let hash = SHA256.hash(data: Data(key.utf8))
-        let hashString = hash.compactMap { String(format: "%02x", $0) }.joined()
-        return hashString + ".png"
-    }
-    
     /// Returns the full file URL for the given cache key, if the disk cache is available.
     ///
     /// - Parameters:
     ///     - key: The cache key.
     /// - Returns: The file URL, or nil if the disk cache is unavailable.
-    private func diskFileURL(for key: String) -> URL? {
-        diskCacheURL?.appendingPathComponent(diskFileName(for: key))
+    private static func diskFileURL(for key: String) -> URL? {
+        let filename = key + ".png"
+        return ThumbnailCache.diskCacheURL?.appendingPathComponent(filename)
     }
     
     /// Writes a thumbnail image to disk as PNG data.
@@ -126,7 +141,7 @@ internal actor ThumbnailCache {
     ///     - image: The thumbnail to write.
     ///     - key: The cache key.
     private func writeToDisk(_ image: UIImage, for key: String) {
-        guard let url = diskFileURL(for: key) else { return }
+        guard let url = ThumbnailCache.diskFileURL(for: key) else { return }
         
         do {
             guard let data = image.pngData() else {
@@ -147,7 +162,7 @@ internal actor ThumbnailCache {
     ///     - key: The cache key.
     /// - Returns: The thumbnail, if it exists on disk. Otherwise, nil.
     private func readFromDisk(for key: String) -> UIImage? {
-        guard let url = diskFileURL(for: key),
+        guard let url = ThumbnailCache.diskFileURL(for: key),
               FileManager.default.fileExists(atPath: url.path)
         else { return nil }
         
@@ -166,20 +181,20 @@ internal actor ThumbnailCache {
     /// - Parameters:
     ///     - key: The cache key.
     private func removeFromDisk(for key: String) {
-        guard let url = diskFileURL(for: key) else { return }
+        guard let url = ThumbnailCache.diskFileURL(for: key) else { return }
         try? FileManager.default.removeItem(at: url)
     }
     
     /// Removes all thumbnails from the disk cache.
     private func clearDiskCache() {
-        guard let url = diskCacheURL else { return }
+        guard let url = ThumbnailCache.diskCacheURL else { return }
         try? FileManager.default.removeItem(at: url)
         try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
     }
     
     /// Evicts the least recently used thumbnails from disk when the file count exceeds the limit.
     private func evictDiskCacheIfNeeded() {
-        guard let url = diskCacheURL else { return }
+        guard let url = ThumbnailCache.diskCacheURL else { return }
         
         let fm = FileManager.default
         guard let files = try? fm.contentsOfDirectory(

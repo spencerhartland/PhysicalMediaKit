@@ -9,7 +9,9 @@ import RealityKit
 import SwiftUI
 
 /// The abstracted base model for all physical media.
-@MainActor @Observable class PhysicalMediaModel {
+@MainActor
+@Observable
+internal class PhysicalMediaModel {
     /// The default factor by which to multiply the model scale.
     private let defaultModelScaleFactor: Float = 10.0
     
@@ -18,8 +20,7 @@ import SwiftUI
     
     /// Creates a new `PhysicalMediaModel`.
     ///
-    /// - Parameters:
-    ///     - entityName: The name of the entity in the module to render.
+    /// - Parameter entityName: The name of the entity in the module to render.
     /// - Returns: The new `PhysicalMediaModel`.
     internal init(named entityName: String) {
         self.entityName = entityName
@@ -46,9 +47,13 @@ import SwiftUI
     ///     - color: The color of the physical media.
     ///     - scale: The entity's scale.
     /// - Returns: The loaded entity with customizations applied.
-    internal func loadModel(with artworkURL: URL?, and color: UIColor? = nil, at scale: Float = 1.0) async -> Entity? {
+    internal func loadModel(
+        with artworkURL: URL?,
+        and color: UIColor? = nil,
+        at scale: Float = 1.0
+    ) async -> Entity? {
         do {
-            var entity = try await self.loadEntity(with: entityName, at: scale)
+            let entity = try await self.loadEntity(with: entityName, at: scale)
             if let artworkURL, let artwork = await fetchArtwork(from: artworkURL) {
                 applyArtwork(artwork, to: entity)
             }
@@ -64,8 +69,7 @@ import SwiftUI
     
     /// Returms a texture generated from the album artwork retrieved from the specified URL.
     ///
-    /// - Parameters:
-    ///     - artworkURL: The remote URL from which to retrieve the album artwork.
+    /// - Parameter artworkURL: The remote URL from which to retrieve the album artwork.
     /// - Returns: The texture generated from the album artwork.
     private func fetchArtwork(from artworkURL: URL) async -> TextureResource? {
         return await ArtworkCache.shared.loadTexture(for: artworkURL)
@@ -81,8 +85,8 @@ import SwiftUI
         let entity = try await Entity(named: name, in: .module)
         entity.name = name
         let modelScale = scale * defaultModelScaleFactor
-        await entity.setScale(.init(repeating: modelScale), relativeTo: entity)
-        await entity.generateCollisionShapes(recursive: true)
+        entity.setScale(.init(repeating: modelScale), relativeTo: entity)
+        entity.generateCollisionShapes(recursive: true)
         return entity
     }
 }

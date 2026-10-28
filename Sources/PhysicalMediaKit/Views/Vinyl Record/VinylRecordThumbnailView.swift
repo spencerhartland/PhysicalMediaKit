@@ -16,12 +16,7 @@ internal struct VinylRecordThumbnailView: View {
     private var vinylColor: UIColor
     private var scale: Float
     private var rotationXY: (Float, Float)?
-    
-    private var thumbnailCacheKey: String {
-        let urlString = artworkURL?.absoluteString ?? "no-artwork"
-        let colorString = vinylColor.description
-        return "vinyl-\(urlString)-\(colorString)"
-    }
+    private var thumbnailCacheKey: String
     
     init(
         _ artworkURL: URL?,
@@ -33,6 +28,13 @@ internal struct VinylRecordThumbnailView: View {
         self.vinylColor = vinylColor
         self.scale = scale
         self.rotationXY = rotationXY
+        self.thumbnailCacheKey = PhysicalMedia.cacheKey(
+            for: .vinylRecord,
+            artworkURL: artworkURL,
+            mediaColor: vinylColor,
+            scale: scale,
+            rotationXY: rotationXY,
+        )
     }
     
     var body: some View {

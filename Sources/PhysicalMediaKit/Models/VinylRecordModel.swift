@@ -10,7 +10,9 @@ import RealityKit
 import Foundation
 
 /// A model implementing funtionality for rendering a 3D model of a vinyl record.
-@MainActor @Observable final class VinylRecordModel: PhysicalMediaModel {
+@MainActor
+@Observable
+internal final class VinylRecordModel: PhysicalMediaModel {
     /// The name of the vinyl record entity in the bundle.
     private let vinylRecordEntityName = "vinyl_record"
     /// The name of the vinyl record's sleeve.

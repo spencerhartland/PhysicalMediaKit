@@ -14,11 +14,11 @@ internal struct PhysicalMedia3DModelView: View {
     private let attractLoopDelay: Double = 4
     
     @State private var dragGestureActive = false
-    @State private var rotationX: Float = 0
-    @State private var rotationY: Float = 0
+    @State private var rotationX: Float
+    @State private var rotationY: Float
     
     // Animation context
-    @State private var shouldAnimate: Bool = true
+    @State private var shouldAnimate: Bool
     @State private var rotationResetTimer: Publishers.Autoconnect<Timer.TimerPublisher>?
     @State private var attractLoopTimer: Publishers.Autoconnect<Timer.TimerPublisher>?
     @State private var animationStep: Int = 0
@@ -45,6 +45,10 @@ internal struct PhysicalMedia3DModelView: View {
             rotationY = rotY
         } else {
             homeXY = (0, 0)
+            
+            shouldAnimate = true
+            rotationX = 0
+            rotationY = 0
         }
         
         makeContent = make
