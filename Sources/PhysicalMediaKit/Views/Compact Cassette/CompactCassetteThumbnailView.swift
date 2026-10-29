@@ -23,19 +23,19 @@ internal struct CompactCassetteThumbnailView: View {
     
     init(
         _ artworkURL: URL?,
-        _ vinylColor: UIColor,
+        _ cassetteColor: UIColor,
         _ scale: Float,
         _ rotationXY: (Float, Float)?,
     ) {
         self.artworkURL = artworkURL
-        self.cassetteColor = vinylColor
+        self.cassetteColor = cassetteColor
         self.scale = scale
         self.rotationXY = rotationXY
     }
     
     var body: some View {
         PhysicalMediaThumbnailView(thumbnailCacheKey, rotationXY) {
-            return await model.loadModel(with: artworkURL, and: cassetteColor, at: scale)
+            return try? await model.loadEntity(with: artworkURL, and: cassetteColor, at: scale)
         }
     }
 }

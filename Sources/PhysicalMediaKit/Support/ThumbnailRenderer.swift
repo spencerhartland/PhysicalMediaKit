@@ -11,6 +11,10 @@ import Metal
 
 /// Renders thumbnail images from RealityKit entities.
 @MainActor internal final class ThumbnailRenderer {
+    /// The width / height of the thumbnail in pixels.
+    private static let thumbnailSize = 1024
+    
+    
     /// The renderer's Metal device.
     private let device: MTLDevice?
     /// The queue of commands for the Metal device.
@@ -162,8 +166,8 @@ import Metal
         
         let textureDesc = MTLTextureDescriptor.texture2DDescriptor(
             pixelFormat: .bgra8Unorm,
-            width: ThumbnailCache.thumbnailSize,
-            height: ThumbnailCache.thumbnailSize,
+            width: Self.thumbnailSize,
+            height: Self.thumbnailSize,
             mipmapped: false
         )
         textureDesc.usage = [.shaderRead, .shaderWrite, .renderTarget]

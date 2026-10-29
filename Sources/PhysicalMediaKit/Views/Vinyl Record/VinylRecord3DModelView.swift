@@ -36,8 +36,6 @@ internal struct VinylRecord3DModelView: View {
             if let entity {
                 PhysicalMedia3DModelView(entity: entity.name, rotationXY: rotationXY) { content in
                     content.add(entity)
-                } update: { entity in
-                    model.applyColor(vinylColor, to: entity)
                 }
             } else {
                 // Show placeholder
@@ -46,7 +44,17 @@ internal struct VinylRecord3DModelView: View {
         }
         .task {
             guard self.entity == nil else { return }
-            self.entity = await model.loadModel(with: artworkURL, and: vinylColor, at: scale)
+            do {
+                self.entity = try await model.loadEntity(with: artworkURL, and: vinylColor, at: scale)
+            } catch {
+                print("Error while loading vinyl record model: \(error.localizedDescription)")
+            }
+        }
+        .onChange(of: artworkURL) {
+            if let entity, let artworkURL { model.applyArtwork(from: artworkURL, to: entity) }
+        }
+        .onChange(of: vinylColor) {
+            if let entity { model.applyColor(vinylColor, to: entity) }
         }
     }
 }

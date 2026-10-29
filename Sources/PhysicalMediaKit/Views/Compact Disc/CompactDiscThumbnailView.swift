@@ -31,7 +31,7 @@ internal struct CompactDiscThumbnailView: View {
     
     var body: some View {
         PhysicalMediaThumbnailView(thumbnailCacheKey, rotationXY) {
-            return await model.loadModel(with: artworkURL, at: scale)
+            return try? await model.loadEntity(with: artworkURL, at: scale)
         }
     }
 }

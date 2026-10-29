@@ -134,38 +134,18 @@ public struct PhysicalMedia {
     
     // MARK: Thumbnail Images -
     
-    public static func configureThumbnailCache(with diskCacheURL: URL) {
-        ThumbnailCache.configure(with: diskCacheURL)
-    }
-    
     public static func vinylRecordThumbnailImage(
         _ artworkURL: URL?,
         _ vinylColor: UIColor,
         scale: Float = 0.125,
         rotationXY: (Float, Float)? = (0.0, -0.08)
     ) async -> UIImage? {
-        let model = VinylRecordModel()
-        
-        guard let entity = await model.loadModel(
-            with: artworkURL,
-            and: vinylColor,
-            at: scale
-        ) else {
-            return nil
-        }
-        
-        let cacheKey = cacheKey(
+        return await thumbnailImage(
             for: .vinylRecord,
             artworkURL: artworkURL,
             mediaColor: vinylColor,
             scale: scale,
-            rotationXY: rotationXY,
-        )
-        
-        return await ThumbnailRenderer.shared.thumbnail(
-            for: entity,
-            with: cacheKey,
-            and: rotationXY,
+            rotationXY: rotationXY
         )
     }
     
@@ -174,27 +154,12 @@ public struct PhysicalMedia {
         scale: Float = 0.125,
         rotationXY: (Float, Float)? = nil
     ) async -> UIImage? {
-        let model = CompactDiscModel()
-        
-        guard let entity = await model.loadModel(
-            with: artworkURL,
-            at: scale)
-        else {
-            return nil
-        }
-        
-        let cacheKey = cacheKey(
+        return await thumbnailImage(
             for: .compactDisc,
             artworkURL: artworkURL,
             mediaColor: nil,
             scale: scale,
-            rotationXY: rotationXY,
-        )
-        
-        return await ThumbnailRenderer.shared.thumbnail(
-            for: entity,
-            with: cacheKey,
-            and: rotationXY,
+            rotationXY: rotationXY
         )
     }
     
@@ -204,28 +169,12 @@ public struct PhysicalMedia {
         scale: Float = 0.250,
         rotationXY: (Float, Float)? = nil
     ) async -> UIImage? {
-        let model = CompactCassetteModel()
-        
-        guard let entity = await model.loadModel(
-            with: artworkURL,
-            and: cassetteColor,
-            at: scale)
-        else {
-            return nil
-        }
-        
-        let cacheKey = cacheKey(
+        return await thumbnailImage(
             for: .compactCassette,
             artworkURL: artworkURL,
             mediaColor: cassetteColor,
             scale: scale,
-            rotationXY: rotationXY,
-        )
-        
-        return await ThumbnailRenderer.shared.thumbnail(
-            for: entity,
-            with: cacheKey,
-            and: rotationXY,
+            rotationXY: rotationXY
         )
     }
     
@@ -247,7 +196,7 @@ public struct PhysicalMedia {
             }
         }()
         
-        guard let entity = await model.loadModel(
+        guard let entity = try? await model.loadEntity(
             with: artworkURL,
             and: mediaColor,
             at: scale
@@ -255,7 +204,7 @@ public struct PhysicalMedia {
             return nil
         }
         
-        let cacheKey = cacheKey(
+        let key = cacheKey(
             for: mediaType,
             artworkURL: artworkURL,
             mediaColor: mediaColor,
@@ -263,11 +212,19 @@ public struct PhysicalMedia {
             rotationXY: rotationXY,
         )
         
-        return await ThumbnailRenderer.shared.thumbnail(
-            for: entity,
-            with: cacheKey,
-            and: rotationXY,
-        )
+        if let thumbnail = cachedThumbnail(for: key) {
+            return thumbnail
+        } else {
+            return await ThumbnailRenderer.shared.thumbnail(
+                for: entity,
+                with: key,
+                and: rotationXY,
+            )
+        }
+    }
+    
+    public static func configureThumbnailCache(with diskCacheURL: URL) {
+        ThumbnailCache.configure(with: diskCacheURL)
     }
     
     nonisolated public static func cachedThumbnail(for key: String) -> UIImage? {
@@ -281,39 +238,12 @@ public struct PhysicalMedia {
         scale: Float,
         rotationXY: (Float, Float)?,
     ) -> String {
-        let mediaTypeString: String = mediaType.rawValue
-        let urlString: String = artworkURL?.absoluteString ?? "no_artwork"
-        let colorString: String? = mediaColor?.description
-        let scaleString: String = String(scale)
-        let rotationXYString: String? = {
-            if let rotationXY {
-                return "\(rotationXY.0)_\(rotationXY.1)"
-            } else {
-                return nil
-            }
-        }()
-        
-        let components: [String?] = [
-            mediaTypeString,
-            urlString,
-            colorString,
-            scaleString,
-            rotationXYString,
-        ]
-        
-        var key: String = ""
-        for component in components {
-            if let component { key.append(component) }
-        }
-        key = hashString(for: key)
-        return key
-    }
-}
-
-extension PhysicalMedia {
-    nonisolated private static func hashString(for string: String) -> String {
-        let stringData = Data(string.utf8)
-        let hash = SHA256.hash(data: stringData)
-        return hash.compactMap { String(format: "%02x", $0) }.joined()
+        return ThumbnailCache.cacheKey(
+            for: mediaType,
+            artworkURL: artworkURL,
+            mediaColor: mediaColor,
+            scale: scale,
+            rotationXY: rotationXY
+        )
     }
 }

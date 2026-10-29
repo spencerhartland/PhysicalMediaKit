@@ -5,16 +5,15 @@
 //  Created by Spencer Hartland on 2/4/26.
 //
 
-import UIKit
-import RealityKit
+import CryptoKit
 import os
+import RealityKit
+import UIKit
 
 /// A cache to store thumbnails.
 internal actor ThumbnailCache {
-    /// The width / height of the thumbnail in pixels.
-    internal static let thumbnailSize = 1024
     /// The maximum number of thumbnails allowed on disk.
-    private static let maxDiskCount = 64
+    private static let maxThumbnailCount = 64
     /// The name of the disk cache subdirectory.
     private static let diskCacheDirectoryName = "com.spencerhartland.PhysicalMediaKit.thumbnails"
     
@@ -59,6 +58,47 @@ internal actor ThumbnailCache {
         } catch {
             Log.general.error("Failed to create cache directory on disk: \(error)")
         }
+    }
+    
+    private static func hashString(for string: String) -> String {
+        let stringData = Data(string.utf8)
+        let hash = SHA256.hash(data: stringData)
+        return hash.compactMap { String(format: "%02x", $0) }.joined()
+    }
+    
+    internal static func cacheKey(
+        for mediaType: MediaType,
+        artworkURL: URL?,
+        mediaColor: UIColor?,
+        scale: Float,
+        rotationXY: (Float, Float)?,
+    ) -> String {
+        let mediaTypeString: String = mediaType.rawValue
+        let urlString: String = artworkURL?.absoluteString ?? "no_artwork"
+        let colorString: String? = mediaColor?.description
+        let scaleString: String = String(scale)
+        let rotationXYString: String? = {
+            if let rotationXY {
+                return "\(rotationXY.0)_\(rotationXY.1)"
+            } else {
+                return nil
+            }
+        }()
+        
+        let components: [String?] = [
+            mediaTypeString,
+            urlString,
+            colorString,
+            scaleString,
+            rotationXYString,
+        ]
+        
+        var key: String = ""
+        for component in components {
+            if let component { key.append(component) }
+        }
+        key = hashString(for: key)
+        return key
     }
     
     internal static func thumbnailFromDisk(for key: String) -> UIImage? {
@@ -203,7 +243,7 @@ internal actor ThumbnailCache {
             options: .skipsHiddenFiles
         ) else { return }
         
-        guard files.count > ThumbnailCache.maxDiskCount else { return }
+        guard files.count > ThumbnailCache.maxThumbnailCount else { return }
         
         // Sort by modification date, oldest first
         let sorted = files.sorted { a, b in
@@ -213,7 +253,7 @@ internal actor ThumbnailCache {
         }
         
         // Remove oldest files until we're back at the limit
-        let countToRemove = sorted.count - ThumbnailCache.maxDiskCount
+        let countToRemove = sorted.count - ThumbnailCache.maxThumbnailCount
         for file in sorted.prefix(countToRemove) {
             try? fm.removeItem(at: file)
         }

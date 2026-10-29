@@ -36,8 +36,6 @@ internal struct CompactCassette3DModelView: View {
             if let entity {
                 PhysicalMedia3DModelView(entity: entity.name, rotationXY: rotationXY) { content in
                     content.add(entity)
-                } update: { content in
-                    model.applyColor(cassetteColor, to: entity)
                 }
             } else {
                 PlaceholderView()
@@ -45,7 +43,17 @@ internal struct CompactCassette3DModelView: View {
         }
         .task {
             guard self.entity == nil else { return }
-            self.entity = await model.loadModel(with: artworkURL, and: cassetteColor, at: scale)
+            do {
+                self.entity = try await model.loadEntity(with: artworkURL, and: cassetteColor, at: scale)
+            } catch {
+                print("Error while loading compact cassette model: \(error.localizedDescription)")
+            }
+        }
+        .onChange(of: artworkURL) {
+            if let entity, let artworkURL { model.applyArtwork(from: artworkURL, to: entity) }
+        }
+        .onChange(of: cassetteColor) {
+            if let entity { model.applyColor(cassetteColor, to: entity) }
         }
     }
 }

@@ -39,7 +39,7 @@ internal struct VinylRecordThumbnailView: View {
     
     var body: some View {
         PhysicalMediaThumbnailView(thumbnailCacheKey, rotationXY) {
-            return await model.loadModel(with: artworkURL, and: vinylColor, at: scale)
+            return try? await model.loadEntity(with: artworkURL, and: vinylColor, at: scale)
         }
     }
 }
