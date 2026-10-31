@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import CryptoKit
 
 /// Provides methods to render 3D models of common physical media.
-@MainActor public struct PhysicalMedia {
+@MainActor
+public struct PhysicalMedia {
     
     // MARK: 3D Model Views -
     
@@ -93,7 +95,7 @@ import SwiftUI
         _ artworkURL: URL?,
         _ vinylColor: UIColor,
         scale: Float = 0.125,
-        rotationXY: (Float, Float)? = (0.0, -0.08)
+        rotationXY: (Float, Float)? = (0, 0)
     ) -> some View {
         VinylRecordThumbnailView(artworkURL, vinylColor, scale, rotationXY)
     }
@@ -136,24 +138,15 @@ import SwiftUI
         _ artworkURL: URL?,
         _ vinylColor: UIColor,
         scale: Float = 0.125,
-        rotationXY: (Float, Float)? = (0.0, -0.08)
+        rotationXY: (Float, Float)? = (0, 0)
     ) async -> UIImage? {
-        let renderer = ThumbnailRenderer()
-        let model = VinylRecordModel()
-        
-        guard let entity = await model.loadModel(
-            with: artworkURL,
-            and: vinylColor,
-            at: scale)
-        else {
-            return nil
-        }
-        
-        let urlString = artworkURL?.absoluteString ?? "no-artwork"
-        let colorString = vinylColor.description
-        let cacheKey = "vinyl-\(urlString)-\(colorString)"
-        
-        return await renderer.thumbnail(for: entity, with: cacheKey, and: rotationXY)
+        return await thumbnailImage(
+            for: .vinylRecord,
+            artworkURL: artworkURL,
+            mediaColor: vinylColor,
+            scale: scale,
+            rotationXY: rotationXY
+        )
     }
     
     public static func compactDiscThumbnailImage(
@@ -161,20 +154,13 @@ import SwiftUI
         scale: Float = 0.125,
         rotationXY: (Float, Float)? = nil
     ) async -> UIImage? {
-        let renderer = ThumbnailRenderer()
-        let model = CompactDiscModel()
-        
-        guard let entity = await model.loadModel(
-            with: artworkURL,
-            at: scale)
-        else {
-            return nil
-        }
-        
-        let urlString = artworkURL?.absoluteString ?? "no-artwork"
-        let cacheKey = "compactDisc-\(urlString)"
-        
-        return await renderer.thumbnail(for: entity, with: cacheKey, and: rotationXY)
+        return await thumbnailImage(
+            for: .compactDisc,
+            artworkURL: artworkURL,
+            mediaColor: nil,
+            scale: scale,
+            rotationXY: rotationXY
+        )
     }
     
     public static func compactCassetteThumbnailImage(
@@ -183,21 +169,90 @@ import SwiftUI
         scale: Float = 0.250,
         rotationXY: (Float, Float)? = nil
     ) async -> UIImage? {
-        let renderer = ThumbnailRenderer()
-        let model = CompactCassetteModel()
+        return await thumbnailImage(
+            for: .compactCassette,
+            artworkURL: artworkURL,
+            mediaColor: cassetteColor,
+            scale: scale,
+            rotationXY: rotationXY
+        )
+    }
+    
+    public static func thumbnailImage(
+        for mediaType: MediaType,
+        artworkURL: URL?,
+        mediaColor: UIColor?,
+        scale: Float,
+        rotationXY: (Float, Float)?
+    ) async -> UIImage? {
+        let model: PhysicalMediaModel = {
+            switch mediaType {
+            case .vinylRecord:
+                VinylRecordModel()
+            case .compactDisc:
+                CompactDiscModel()
+            case .compactCassette:
+                CompactCassetteModel()
+            }
+        }()
         
-        guard let entity = await model.loadModel(
-            with: artworkURL,
-            and: cassetteColor,
-            at: scale)
-        else {
-            return nil
+        let key = cacheKey(
+            for: mediaType,
+            artworkURL: artworkURL,
+            mediaColor: mediaColor,
+            scale: scale,
+            rotationXY: rotationXY,
+        )
+        
+        if let thumbnail = await ThumbnailCache.shared.retrieveThumbnail(with: key) {
+            return thumbnail
+        } else {
+            do {
+                Log.general.debug("PhysicalMedia.thumbnailImage(...) - Loading entity...")
+                let entity = try await model.loadEntity(
+                    with: artworkURL,
+                    and: mediaColor,
+                    at: scale
+                )
+                
+                return await ThumbnailRenderer.shared.thumbnail(
+                    for: entity,
+                    with: key,
+                    and: rotationXY,
+                )
+            } catch {
+                Log.general.error(
+                """
+                PhysicalMedia.thumbnailImage(...) - Error while loading model: \
+                \(error.localizedDescription)
+                """
+                )
+                return nil
+            }
         }
-        
-        let urlString = artworkURL?.absoluteString ?? "no-artwork"
-        let colorString = cassetteColor.description
-        let cacheKey = "vinyl-\(urlString)-\(colorString)"
-        
-        return await renderer.thumbnail(for: entity, with: cacheKey, and: rotationXY)
+    }
+    
+    public static func configureThumbnailCache(with diskCacheURL: URL) {
+        ThumbnailCache.configure(with: diskCacheURL)
+    }
+    
+    nonisolated public static func cachedThumbnail(for key: String) -> UIImage? {
+        return ThumbnailCache.thumbnailFromDisk(for: key)
+    }
+    
+    nonisolated public static func cacheKey(
+        for mediaType: MediaType,
+        artworkURL: URL?,
+        mediaColor: UIColor?,
+        scale: Float,
+        rotationXY: (Float, Float)?,
+    ) -> String {
+        return ThumbnailCache.cacheKey(
+            for: mediaType,
+            artworkURL: artworkURL,
+            mediaColor: mediaColor,
+            scale: scale,
+            rotationXY: rotationXY
+        )
     }
 }

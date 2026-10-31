@@ -14,16 +14,16 @@ internal struct CompactDisc3DModelView: View {
     @State private var entity: Entity?
     
     // Customizable attributes
-    private var albumArtURL: URL?
+    private var artworkURL: URL?
     private var scale: Float
     private var rotationXY: (Float, Float)?
     
     public init(
-        _ albumArtURL: URL?,
+        _ artworkURL: URL?,
         _ scale: Float,
         _ rotationXY: (Float, Float)?,
     ) {
-        self.albumArtURL = albumArtURL
+        self.artworkURL = artworkURL
         self.scale = scale
         self.rotationXY = rotationXY
     }
@@ -40,7 +40,14 @@ internal struct CompactDisc3DModelView: View {
         }
         .task {
             guard self.entity == nil else { return }
-            self.entity = await model.loadModel(with: albumArtURL, at: scale)
+            do {
+                self.entity = try await model.loadEntity(with: artworkURL, at: scale)
+            } catch {
+                print("Error while loading compact disc model: \(error.localizedDescription)")
+            }
+        }
+        .onChange(of: artworkURL) {
+            if let entity, let artworkURL { model.applyArtwork(from: artworkURL, to: entity) }
         }
     }
 }

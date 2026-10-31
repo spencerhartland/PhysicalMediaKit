@@ -13,11 +13,7 @@ internal struct CompactDiscThumbnailView: View {
     private var artworkURL: URL?
     private var scale: Float
     private var rotationXY: (Float, Float)?
-    
-    private var thumbnailCacheKey: String {
-        let urlString = artworkURL?.absoluteString ?? "no-artwork"
-        return "compact_disc-\(urlString)"
-    }
+    private var thumbnailCacheKey: String
     
     init(
         _ artworkURL: URL?,
@@ -27,11 +23,28 @@ internal struct CompactDiscThumbnailView: View {
         self.artworkURL = artworkURL
         self.scale = scale
         self.rotationXY = rotationXY
+        self.thumbnailCacheKey = PhysicalMedia.cacheKey(
+            for: .compactDisc,
+            artworkURL: artworkURL,
+            mediaColor: nil,
+            scale: scale,
+            rotationXY: rotationXY
+        )
     }
     
     var body: some View {
         PhysicalMediaThumbnailView(thumbnailCacheKey, rotationXY) {
-            return await model.loadModel(with: artworkURL, at: scale)
+            do {
+                Log.general.debug("CompactDiscThumbnailView - Loading entity...")
+                return try await model.loadEntity(with: artworkURL, at: scale)
+            } catch {
+                Log.general.error(
+                    """
+                    CompactDiscThumbnailView - Error while loading model: \(error.localizedDescription)
+                    """
+                )
+                return nil
+            }
         }
     }
 }

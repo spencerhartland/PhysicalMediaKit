@@ -16,12 +16,7 @@ internal struct VinylRecordThumbnailView: View {
     private var vinylColor: UIColor
     private var scale: Float
     private var rotationXY: (Float, Float)?
-    
-    private var thumbnailCacheKey: String {
-        let urlString = artworkURL?.absoluteString ?? "no-artwork"
-        let colorString = vinylColor.description
-        return "vinyl-\(urlString)-\(colorString)"
-    }
+    private var thumbnailCacheKey: String
     
     init(
         _ artworkURL: URL?,
@@ -33,11 +28,39 @@ internal struct VinylRecordThumbnailView: View {
         self.vinylColor = vinylColor
         self.scale = scale
         self.rotationXY = rotationXY
+        self.thumbnailCacheKey = PhysicalMedia.cacheKey(
+            for: .vinylRecord,
+            artworkURL: artworkURL,
+            mediaColor: vinylColor,
+            scale: scale,
+            rotationXY: rotationXY,
+        )
     }
     
     var body: some View {
         PhysicalMediaThumbnailView(thumbnailCacheKey, rotationXY) {
-            return await model.loadModel(with: artworkURL, and: vinylColor, at: scale)
+            do {
+                Log.general.debug("VinylRecordThumbnailView - Loading entity...")
+                return try await model.loadEntity(with: artworkURL, and: vinylColor, at: scale)
+            } catch {
+                Log.general.error(
+                    """
+                    VinylRecordThumbnailView - Error while loading model: \(error.localizedDescription)
+                    """
+                )
+                return nil
+            }
         }
     }
+}
+
+#Preview {
+    let artworkURL = URL(string:
+        """
+        https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/d5/7f/6e/d57f6e8e-068c-ef83-2a62-663e\
+        47d3f002/Syro_digital_packshot_RGB_1400.jpg/600x600bb.jpg
+        """
+    )
+    
+    VinylRecordThumbnailView(artworkURL, .black, 0.150, nil)
 }
