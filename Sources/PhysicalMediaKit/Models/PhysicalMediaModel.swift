@@ -45,8 +45,13 @@ internal class PhysicalMediaModel {
         let modelScale = scale * defaultModelScaleFactor
         entity.setScale(.init(repeating: modelScale), relativeTo: entity)
         entity.generateCollisionShapes(recursive: true)
-        if let artworkURL { applyArtwork(from: artworkURL, to: entity) }
+        
+        if let artworkURL, let artwork = await fetchArtwork(from: artworkURL) {
+            Log.general.debug("Applying artwork...")
+            applyArtwork(artwork, to: entity)
+        }
         if let color { applyColor(color, to: entity) }
+        
         return entity
     }
     

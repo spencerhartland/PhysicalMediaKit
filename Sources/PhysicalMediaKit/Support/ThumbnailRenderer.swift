@@ -11,8 +11,10 @@ import Metal
 
 /// Renders thumbnail images from RealityKit entities.
 @MainActor internal final class ThumbnailRenderer {
-    /// The width / height of the thumbnail in pixels.
-    private static let thumbnailSize = 1024
+    // Max pixel count of images displayed by widget: 718,000
+    // 718,000 / 3 images (favorites display widget) = ~239,333 px per image
+    // 239,333 px per image = ~489 x 489 image dimensions maximum
+    private static let thumbnailSize = 480
     
     
     /// The renderer's Metal device.

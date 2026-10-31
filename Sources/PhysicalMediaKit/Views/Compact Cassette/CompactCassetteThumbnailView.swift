@@ -14,12 +14,7 @@ internal struct CompactCassetteThumbnailView: View {
     private var cassetteColor: UIColor
     private var scale: Float
     private var rotationXY: (Float, Float)?
-    
-    private var thumbnailCacheKey: String {
-        let urlString = artworkURL?.absoluteString ?? "no-artwork"
-        let colorString = cassetteColor.description
-        return "compact_cassette-\(urlString)-\(colorString)"
-    }
+    private var thumbnailCacheKey: String
     
     init(
         _ artworkURL: URL?,
@@ -31,11 +26,29 @@ internal struct CompactCassetteThumbnailView: View {
         self.cassetteColor = cassetteColor
         self.scale = scale
         self.rotationXY = rotationXY
+        self.thumbnailCacheKey = PhysicalMedia.cacheKey(
+            for: .compactCassette,
+            artworkURL: artworkURL,
+            mediaColor: cassetteColor,
+            scale: scale,
+            rotationXY: rotationXY
+        )
     }
     
     var body: some View {
         PhysicalMediaThumbnailView(thumbnailCacheKey, rotationXY) {
-            return try? await model.loadEntity(with: artworkURL, and: cassetteColor, at: scale)
+            do {
+                Log.general.debug("CompactCassetteThumbnailView - Loading entity...")
+                return try await model.loadEntity(with: artworkURL, and: cassetteColor, at: scale)
+            } catch {
+                Log.general.error(
+                    """
+                    CompactCassetteThumbnailView - Error while loading model: \
+                    \(error.localizedDescription)
+                    """
+                )
+                return nil
+            }
         }
     }
 }

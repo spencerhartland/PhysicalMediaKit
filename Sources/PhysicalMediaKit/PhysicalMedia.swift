@@ -95,7 +95,7 @@ public struct PhysicalMedia {
         _ artworkURL: URL?,
         _ vinylColor: UIColor,
         scale: Float = 0.125,
-        rotationXY: (Float, Float)? = (0.0, -0.08)
+        rotationXY: (Float, Float)? = (0, 0)
     ) -> some View {
         VinylRecordThumbnailView(artworkURL, vinylColor, scale, rotationXY)
     }
@@ -138,7 +138,7 @@ public struct PhysicalMedia {
         _ artworkURL: URL?,
         _ vinylColor: UIColor,
         scale: Float = 0.125,
-        rotationXY: (Float, Float)? = (0.0, -0.08)
+        rotationXY: (Float, Float)? = (0, 0)
     ) async -> UIImage? {
         return await thumbnailImage(
             for: .vinylRecord,
@@ -196,14 +196,6 @@ public struct PhysicalMedia {
             }
         }()
         
-        guard let entity = try? await model.loadEntity(
-            with: artworkURL,
-            and: mediaColor,
-            at: scale
-        ) else {
-            return nil
-        }
-        
         let key = cacheKey(
             for: mediaType,
             artworkURL: artworkURL,
@@ -212,14 +204,31 @@ public struct PhysicalMedia {
             rotationXY: rotationXY,
         )
         
-        if let thumbnail = cachedThumbnail(for: key) {
+        if let thumbnail = await ThumbnailCache.shared.retrieveThumbnail(with: key) {
             return thumbnail
         } else {
-            return await ThumbnailRenderer.shared.thumbnail(
-                for: entity,
-                with: key,
-                and: rotationXY,
-            )
+            do {
+                Log.general.debug("PhysicalMedia.thumbnailImage(...) - Loading entity...")
+                let entity = try await model.loadEntity(
+                    with: artworkURL,
+                    and: mediaColor,
+                    at: scale
+                )
+                
+                return await ThumbnailRenderer.shared.thumbnail(
+                    for: entity,
+                    with: key,
+                    and: rotationXY,
+                )
+            } catch {
+                Log.general.error(
+                """
+                PhysicalMedia.thumbnailImage(...) - Error while loading model: \
+                \(error.localizedDescription)
+                """
+                )
+                return nil
+            }
         }
     }
     
