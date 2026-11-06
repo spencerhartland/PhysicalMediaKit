@@ -11,6 +11,12 @@ import CryptoKit
 /// Provides methods to render 3D models of common physical media.
 @MainActor
 public struct PhysicalMedia {
+    @usableFromInline
+    static let defaultVinylRecordThumbnailScale: Float = 0.125
+    @usableFromInline
+    static let defaultCompactDiscThumbnailScale: Float = 0.125
+    @usableFromInline
+    static let defaultCompactCassetteThumbnailScale: Float = 0.250
     
     // MARK: 3D Model Views -
     
@@ -94,7 +100,7 @@ public struct PhysicalMedia {
     public static func vinylRecordThumbnail(
         _ artworkURL: URL?,
         _ vinylColor: UIColor,
-        scale: Float = 0.125,
+        scale: Float = defaultVinylRecordThumbnailScale,
         rotationXY: (Float, Float)? = (0, 0)
     ) -> some View {
         VinylRecordThumbnailView(artworkURL, vinylColor, scale, rotationXY)
@@ -109,7 +115,7 @@ public struct PhysicalMedia {
     ///     - rotationXY: The rotation, from 0.0 to 1.0, of the model on the X and Y axes.
     public static func compactDiscThumbnail(
         _ artworkURL: URL?,
-        scale: Float = 0.125,
+        scale: Float = defaultCompactDiscThumbnailScale,
         rotationXY: (Float, Float)? = nil
     ) -> some View {
         CompactDiscThumbnailView(artworkURL, scale, rotationXY)
@@ -126,7 +132,7 @@ public struct PhysicalMedia {
     public static func compactCassetteThumbnail(
         _ artworkURL: URL?,
         _ cassetteColor: UIColor,
-        scale: Float = 0.250,
+        scale: Float = defaultCompactCassetteThumbnailScale,
         rotationXY: (Float, Float)? = nil
     ) -> some View {
         CompactCassetteThumbnailView(artworkURL, cassetteColor, scale, rotationXY)
@@ -137,7 +143,7 @@ public struct PhysicalMedia {
     public static func vinylRecordThumbnailImage(
         _ artworkURL: URL?,
         _ vinylColor: UIColor,
-        scale: Float = 0.125,
+        scale: Float = defaultVinylRecordThumbnailScale,
         rotationXY: (Float, Float)? = (0, 0)
     ) async -> UIImage? {
         return await thumbnailImage(
@@ -151,7 +157,7 @@ public struct PhysicalMedia {
     
     public static func compactDiscThumbnailImage(
         _ artworkURL: URL?,
-        scale: Float = 0.125,
+        scale: Float = defaultCompactDiscThumbnailScale,
         rotationXY: (Float, Float)? = nil
     ) async -> UIImage? {
         return await thumbnailImage(
@@ -166,7 +172,7 @@ public struct PhysicalMedia {
     public static func compactCassetteThumbnailImage(
         _ artworkURL: URL?,
         _ cassetteColor: UIColor,
-        scale: Float = 0.250,
+        scale: Float = defaultCompactCassetteThumbnailScale,
         rotationXY: (Float, Float)? = nil
     ) async -> UIImage? {
         return await thumbnailImage(
@@ -182,8 +188,8 @@ public struct PhysicalMedia {
         for mediaType: MediaType,
         artworkURL: URL?,
         mediaColor: UIColor?,
-        scale: Float,
-        rotationXY: (Float, Float)?
+        scale: Float? = nil,
+        rotationXY: (Float, Float)? = nil
     ) async -> UIImage? {
         let model: PhysicalMediaModel = {
             switch mediaType {
@@ -196,11 +202,22 @@ public struct PhysicalMedia {
             }
         }()
         
+        let thumbnailScale: Float = scale ?? {
+            switch mediaType {
+            case .vinylRecord:
+                defaultVinylRecordThumbnailScale
+            case .compactDisc:
+                defaultCompactDiscThumbnailScale
+            case .compactCassette:
+                defaultCompactCassetteThumbnailScale
+            }
+        }()
+        
         let key = cacheKey(
             for: mediaType,
             artworkURL: artworkURL,
             mediaColor: mediaColor,
-            scale: scale,
+            scale: thumbnailScale,
             rotationXY: rotationXY,
         )
         
@@ -212,7 +229,7 @@ public struct PhysicalMedia {
                 let entity = try await model.loadEntity(
                     with: artworkURL,
                     and: mediaColor,
-                    at: scale
+                    at: thumbnailScale
                 )
                 
                 return await ThumbnailRenderer.shared.thumbnail(

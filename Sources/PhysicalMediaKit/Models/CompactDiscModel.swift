@@ -10,7 +10,9 @@ import RealityKit
 import Foundation
 
 /// A model implementing funtionality for rendering a 3D model of a compact disc.
-@MainActor @Observable final class CompactDiscModel: PhysicalMediaModel {
+@MainActor
+@Observable
+final class CompactDiscModel: PhysicalMediaModel {
     /// The name of the compact disc entity in the bundle.
     private let compactDiscEntityName = "cd"
     /// The name of the front of the compact disc's booklet.
