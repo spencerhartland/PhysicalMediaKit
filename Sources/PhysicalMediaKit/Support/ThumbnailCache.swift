@@ -69,13 +69,15 @@ internal actor ThumbnailCache {
     internal static func cacheKey(
         for mediaType: MediaType,
         artworkURL: URL?,
+        coverColor: UIColor?,
         mediaColor: UIColor?,
         scale: Float,
         rotationXY: (Float, Float)?,
     ) -> String {
         let mediaTypeString: String = mediaType.rawValue
         let urlString: String = artworkURL?.absoluteString ?? "no_artwork"
-        let colorString: String? = mediaColor?.description
+        let coverColorString: String? = coverColor?.description
+        let mediaColorString: String? = mediaColor?.description
         let scaleString: String = String(scale)
         let rotationXYString: String? = {
             if let rotationXY {
@@ -88,7 +90,8 @@ internal actor ThumbnailCache {
         let components: [String?] = [
             mediaTypeString,
             urlString,
-            colorString,
+            coverColorString,
+            mediaColorString,
             scaleString,
             rotationXYString,
         ]
@@ -98,6 +101,7 @@ internal actor ThumbnailCache {
             if let component { key.append(component) }
         }
         key = hashString(for: key)
+        
         return key
     }
     

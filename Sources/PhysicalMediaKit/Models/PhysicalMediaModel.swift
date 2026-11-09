@@ -32,13 +32,15 @@ internal class PhysicalMediaModel {
     ///
     /// - Parameters:
     ///     - artworkURL: The album artwork URL.
-    ///     - color: The media color.
+    ///     - coverColor: The color of the media's sleeve / cover / booklet.
+    ///     - mediaColor: The color of the physical media.
     ///     - scale: The entity's scale.
     /// - Returns: The entity with the specified name.
     internal func loadEntity(
         with artworkURL: URL?,
-        and color: UIColor? = nil,
-        at scale: Float,
+        coverColor: UIColor? = nil,
+        mediaColor: UIColor? = nil,
+        scale: Float,
     ) async throws -> Entity {
         let entity = try await Entity(named: entityName, in: .module)
         entity.name = entityName
@@ -49,8 +51,11 @@ internal class PhysicalMediaModel {
         if let artworkURL, let artwork = await fetchArtwork(from: artworkURL) {
             Log.general.debug("Applying artwork...")
             applyArtwork(artwork, to: entity)
+        } else {
+            applyCover(coverColor, to: entity)
         }
-        if let color { applyColor(color, to: entity) }
+        
+        if let mediaColor { applyColor(mediaColor, to: entity) }
         
         return entity
     }
@@ -64,6 +69,11 @@ internal class PhysicalMediaModel {
                 applyArtwork(artwork, to: entity)
             }
         }
+    }
+    
+    internal func applyCover(_ coverColor: UIColor?, to entity: Entity) {
+        guard let coverTexture = placeholderArtwork(with: coverColor) else { return }
+        applyArtwork(coverTexture, to: entity)
     }
     
     /// Applies the specified album artwork to the entity.
@@ -86,5 +96,12 @@ internal class PhysicalMediaModel {
     /// - Returns: The texture generated from the album artwork.
     private func fetchArtwork(from artworkURL: URL) async -> TextureResource? {
         return await ArtworkCache.shared.loadTexture(for: artworkURL)
+    }
+    
+    private func placeholderArtwork(with color: UIColor?) -> TextureResource? {
+        let placeholder = CoverPlaceholderView(color: color)
+        let renderer = ImageRenderer(content: placeholder)
+        guard let image = renderer.cgImage else { return nil }
+        return try? TextureResource(image: image, options: .init(semantic: .raw))
     }
 }
