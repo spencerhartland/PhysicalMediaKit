@@ -289,4 +289,8 @@ public struct PhysicalMedia {
             rotationXY: rotationXY
         )
     }
+    
+    nonisolated public static func albumArtwork(from url: URL) async -> CGImage? {
+        return await ArtworkCache.shared.loadImage(from: url)
+    }
 }
