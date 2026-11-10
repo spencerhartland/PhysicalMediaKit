@@ -69,36 +69,47 @@ internal actor ThumbnailCache {
     internal static func cacheKey(
         for mediaType: MediaType,
         artworkURL: URL?,
+        coverColor: UIColor?,
         mediaColor: UIColor?,
         scale: Float,
         rotationXY: (Float, Float)?,
     ) -> String {
-        let mediaTypeString: String = mediaType.rawValue
-        let urlString: String = artworkURL?.absoluteString ?? "no_artwork"
-        let colorString: String? = mediaColor?.description
-        let scaleString: String = String(scale)
-        let rotationXYString: String? = {
-            if let rotationXY {
-                return "\(rotationXY.0)_\(rotationXY.1)"
-            } else {
-                return nil
-            }
-        }()
+        let effectiveCoverColor = artworkURL == nil ? coverColor : nil
         
-        let components: [String?] = [
-            mediaTypeString,
-            urlString,
-            colorString,
-            scaleString,
-            rotationXYString,
+        let components: [String] = [
+            "type=\(mediaType.rawValue)",
+            "art=\(artworkURL?.absoluteString ?? "none")",
+            "cover=\(effectiveCoverColor.map(stableColorString) ?? "none")",
+            "media=\(mediaColor.map(stableColorString) ?? "none")",
+            "scale=\(scale)",
+            "rot=\(rotationXY.map { "\($0.0),\($0.1)" } ?? "none")",
         ]
         
-        var key: String = ""
-        for component in components {
-            if let component { key.append(component) }
+        return hashString(for: components.joined(separator: "_"))
+    }
+    
+    private static func stableColorString(for color: UIColor) -> String {
+        let resolved = color.resolvedColor(
+            with: UITraitCollection(userInterfaceStyle: .light)
+        )
+        
+        guard let sRGB = CGColorSpace(name: CGColorSpace.sRGB),
+              let converted = resolved.cgColor.converted(
+                to: sRGB, intent: .defaultIntent, options: nil
+              ),
+              let c = converted.components, c.count == 4
+                else {
+            return "unknown"
         }
-        key = hashString(for: key)
-        return key
+        
+        func byte(_ value: CGFloat) -> UInt8 {
+            UInt8((min(max(value, 0), 1) * 255).rounded())
+        }
+        
+        return String(
+            format: "%02X%02X%02X%02X",
+            byte(c[0]), byte(c[1]), byte(c[2]), byte(c[3])
+        )
     }
     
     internal static func thumbnailFromDisk(for key: String) -> UIImage? {

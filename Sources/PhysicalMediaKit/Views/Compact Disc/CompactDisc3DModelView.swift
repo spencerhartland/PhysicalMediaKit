@@ -15,15 +15,18 @@ internal struct CompactDisc3DModelView: View {
     
     // Customizable attributes
     private var artworkURL: URL?
+    private var coverColor: UIColor?
     private var scale: Float
     private var rotationXY: (Float, Float)?
     
     public init(
         _ artworkURL: URL?,
+        _ coverColor: UIColor?,
         _ scale: Float,
         _ rotationXY: (Float, Float)?,
     ) {
         self.artworkURL = artworkURL
+        self.coverColor = coverColor
         self.scale = scale
         self.rotationXY = rotationXY
     }
@@ -41,13 +44,21 @@ internal struct CompactDisc3DModelView: View {
         .task {
             guard self.entity == nil else { return }
             do {
-                self.entity = try await model.loadEntity(with: artworkURL, at: scale)
+                self.entity = try await model.loadEntity(
+                    with: artworkURL,
+                    coverColor: coverColor,
+                    scale: scale
+                )
             } catch {
                 print("Error while loading compact disc model: \(error.localizedDescription)")
             }
         }
         .onChange(of: artworkURL) {
             if let entity, let artworkURL { model.applyArtwork(from: artworkURL, to: entity) }
+        }
+        .onChange(of: coverColor) {
+            guard artworkURL == nil else { return }
+            if let entity, let coverColor { model.applyCover(coverColor, to: entity) }
         }
     }
 }

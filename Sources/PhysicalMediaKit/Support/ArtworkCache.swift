@@ -22,7 +22,7 @@ actor ArtworkCache {
     
     internal func removeAllArtworks() { cache.removeAllObjects() }
     
-    private func loadImage(from url: URL) async -> CGImage? {
+    internal func loadImage(from url: URL) async -> CGImage? {
         if let cached = cache.object(forKey: url as NSURL) { return cached }
         if let existing = inFlight[url] { return await existing.value }
         

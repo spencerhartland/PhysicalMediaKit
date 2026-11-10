@@ -11,6 +11,12 @@ import CryptoKit
 /// Provides methods to render 3D models of common physical media.
 @MainActor
 public struct PhysicalMedia {
+    @usableFromInline
+    static let defaultVinylRecordThumbnailScale: Float = 0.125
+    @usableFromInline
+    static let defaultCompactDiscThumbnailScale: Float = 0.125
+    @usableFromInline
+    static let defaultCompactCassetteThumbnailScale: Float = 0.250
     
     // MARK: 3D Model Views -
     
@@ -32,10 +38,11 @@ public struct PhysicalMedia {
     public static func vinylRecord(
         _ artworkURL: URL?,
         _ vinylColor: UIColor,
+        _ coverColor: UIColor? = nil,
         scale: Float = 1.0,
         rotationXY: (Float, Float)? = nil
     ) -> some View {
-        VinylRecord3DModelView(artworkURL, vinylColor, scale, rotationXY)
+        VinylRecord3DModelView(artworkURL, vinylColor, coverColor, scale, rotationXY)
     }
     
     /// Creates a view of an optionally animated 3D model of a compact disc inside of its
@@ -53,10 +60,11 @@ public struct PhysicalMedia {
     ///     - rotationXY: The rotation, from 0.0 to 1.0, of the model on the X and Y axes.
     public static func compactDisc(
         _ albumArtURL: URL?,
+        _ coverColor: UIColor? = nil,
         scale: Float = 1.0,
         rotationXY: (Float, Float)? = nil
     ) -> some View {
-        CompactDisc3DModelView(albumArtURL, scale, rotationXY)
+        CompactDisc3DModelView(albumArtURL, coverColor, scale, rotationXY)
     }
     
     /// Creates a view of an optionally animated 3D model of a compact cassette inside of its case.
@@ -75,10 +83,11 @@ public struct PhysicalMedia {
     public static func compactCassette(
         _ albumArtURL: URL?,
         _ cassetteColor: UIColor,
+        _ coverColor: UIColor? = nil,
         scale: Float = 2.0,
         rotationXY: (Float, Float)? = nil
     ) -> some View {
-        CompactCassette3DModelView(albumArtURL, cassetteColor, scale, rotationXY)
+        CompactCassette3DModelView(albumArtURL, cassetteColor, coverColor, scale, rotationXY)
     }
     
     // MARK: Thumbnail Views -
@@ -94,10 +103,11 @@ public struct PhysicalMedia {
     public static func vinylRecordThumbnail(
         _ artworkURL: URL?,
         _ vinylColor: UIColor,
-        scale: Float = 0.125,
+        _ coverColor: UIColor? = nil,
+        scale: Float = defaultVinylRecordThumbnailScale,
         rotationXY: (Float, Float)? = (0, 0)
     ) -> some View {
-        VinylRecordThumbnailView(artworkURL, vinylColor, scale, rotationXY)
+        VinylRecordThumbnailView(artworkURL, vinylColor, coverColor, scale, rotationXY)
     }
     
     /// Creates a view of a thumbnail image displaying a 3D model of a compact disc inside of its
@@ -109,10 +119,11 @@ public struct PhysicalMedia {
     ///     - rotationXY: The rotation, from 0.0 to 1.0, of the model on the X and Y axes.
     public static func compactDiscThumbnail(
         _ artworkURL: URL?,
-        scale: Float = 0.125,
+        _ coverColor: UIColor? = nil,
+        scale: Float = defaultCompactDiscThumbnailScale,
         rotationXY: (Float, Float)? = nil
     ) -> some View {
-        CompactDiscThumbnailView(artworkURL, scale, rotationXY)
+        CompactDiscThumbnailView(artworkURL, coverColor, scale, rotationXY)
     }
     
     /// Creates a view of a thumbnail image displaying a 3D model of a compact cassette inside of
@@ -126,10 +137,11 @@ public struct PhysicalMedia {
     public static func compactCassetteThumbnail(
         _ artworkURL: URL?,
         _ cassetteColor: UIColor,
-        scale: Float = 0.250,
+        _ coverColor: UIColor? = nil,
+        scale: Float = defaultCompactCassetteThumbnailScale,
         rotationXY: (Float, Float)? = nil
     ) -> some View {
-        CompactCassetteThumbnailView(artworkURL, cassetteColor, scale, rotationXY)
+        CompactCassetteThumbnailView(artworkURL, cassetteColor, coverColor, scale, rotationXY)
     }
     
     // MARK: Thumbnail Images -
@@ -137,12 +149,14 @@ public struct PhysicalMedia {
     public static func vinylRecordThumbnailImage(
         _ artworkURL: URL?,
         _ vinylColor: UIColor,
-        scale: Float = 0.125,
+        coverColor: UIColor? = nil,
+        scale: Float = defaultVinylRecordThumbnailScale,
         rotationXY: (Float, Float)? = (0, 0)
     ) async -> UIImage? {
         return await thumbnailImage(
             for: .vinylRecord,
             artworkURL: artworkURL,
+            coverColor: coverColor,
             mediaColor: vinylColor,
             scale: scale,
             rotationXY: rotationXY
@@ -151,12 +165,14 @@ public struct PhysicalMedia {
     
     public static func compactDiscThumbnailImage(
         _ artworkURL: URL?,
-        scale: Float = 0.125,
+        coverColor: UIColor? = nil,
+        scale: Float = defaultCompactDiscThumbnailScale,
         rotationXY: (Float, Float)? = nil
     ) async -> UIImage? {
         return await thumbnailImage(
             for: .compactDisc,
             artworkURL: artworkURL,
+            coverColor: coverColor,
             mediaColor: nil,
             scale: scale,
             rotationXY: rotationXY
@@ -166,12 +182,14 @@ public struct PhysicalMedia {
     public static func compactCassetteThumbnailImage(
         _ artworkURL: URL?,
         _ cassetteColor: UIColor,
-        scale: Float = 0.250,
+        coverColor: UIColor? = nil,
+        scale: Float = defaultCompactCassetteThumbnailScale,
         rotationXY: (Float, Float)? = nil
     ) async -> UIImage? {
         return await thumbnailImage(
             for: .compactCassette,
             artworkURL: artworkURL,
+            coverColor: coverColor,
             mediaColor: cassetteColor,
             scale: scale,
             rotationXY: rotationXY
@@ -181,26 +199,28 @@ public struct PhysicalMedia {
     public static func thumbnailImage(
         for mediaType: MediaType,
         artworkURL: URL?,
+        coverColor: UIColor? = nil,
         mediaColor: UIColor?,
-        scale: Float,
-        rotationXY: (Float, Float)?
+        scale: Float? = nil,
+        rotationXY: (Float, Float)? = nil
     ) async -> UIImage? {
-        let model: PhysicalMediaModel = {
+        let thumbnailScale: Float = scale ?? {
             switch mediaType {
             case .vinylRecord:
-                VinylRecordModel()
+                defaultVinylRecordThumbnailScale
             case .compactDisc:
-                CompactDiscModel()
+                defaultCompactDiscThumbnailScale
             case .compactCassette:
-                CompactCassetteModel()
+                defaultCompactCassetteThumbnailScale
             }
         }()
         
         let key = cacheKey(
             for: mediaType,
             artworkURL: artworkURL,
+            coverColor: coverColor,
             mediaColor: mediaColor,
-            scale: scale,
+            scale: thumbnailScale,
             rotationXY: rotationXY,
         )
         
@@ -209,10 +229,22 @@ public struct PhysicalMedia {
         } else {
             do {
                 Log.general.debug("PhysicalMedia.thumbnailImage(...) - Loading entity...")
+                let model: PhysicalMediaModel = {
+                    switch mediaType {
+                    case .vinylRecord:
+                        VinylRecordModel()
+                    case .compactDisc:
+                        CompactDiscModel()
+                    case .compactCassette:
+                        CompactCassetteModel()
+                    }
+                }()
+                
                 let entity = try await model.loadEntity(
                     with: artworkURL,
-                    and: mediaColor,
-                    at: scale
+                    coverColor: coverColor,
+                    mediaColor: mediaColor,
+                    scale: thumbnailScale
                 )
                 
                 return await ThumbnailRenderer.shared.thumbnail(
@@ -243,6 +275,7 @@ public struct PhysicalMedia {
     nonisolated public static func cacheKey(
         for mediaType: MediaType,
         artworkURL: URL?,
+        coverColor: UIColor?,
         mediaColor: UIColor?,
         scale: Float,
         rotationXY: (Float, Float)?,
@@ -250,9 +283,14 @@ public struct PhysicalMedia {
         return ThumbnailCache.cacheKey(
             for: mediaType,
             artworkURL: artworkURL,
+            coverColor: coverColor,
             mediaColor: mediaColor,
             scale: scale,
             rotationXY: rotationXY
         )
+    }
+    
+    nonisolated public static func albumArtwork(from url: URL) async -> CGImage? {
+        return await ArtworkCache.shared.loadImage(from: url)
     }
 }

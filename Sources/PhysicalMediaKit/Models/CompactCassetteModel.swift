@@ -10,7 +10,9 @@ import RealityKit
 import Foundation
 
 /// A model implementing funtionality for rendering a 3D model of a compact cassette.
-@MainActor @Observable final class CompactCassetteModel: PhysicalMediaModel {
+@MainActor
+@Observable
+final class CompactCassetteModel: PhysicalMediaModel {
     /// The name of the cassette entity in the bundle.
     private let cassetteEntityName = "cassette"
     /// An array containing the names of all of the cassette's parts.
