@@ -12,6 +12,5 @@ xcuserdata/
 .DS_Store
 
 # Swift PM
-.swiftpm/configuration/registries.json
-.swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
+.swiftpm/
 .netrc
